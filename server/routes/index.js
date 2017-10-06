@@ -4,7 +4,9 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.redirect('/cards');
+  res.render('index', {
+    title: 'Hollo',
+  });
 });
 
 export default router;
