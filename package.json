@@ -1,0 +1,56 @@
+{
+  "name": "deck-automation",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/start.js",
+    "start:dev": "nodemon -w src --exec \"export NODE_ENV=development && npm run lint:js && babel-node src --presets env\"",
+    "start:production": "export NODE_ENV=production && node build",
+    "build": "babel src -d build",
+    "lint:js": "eslint --ext .js src",
+    "lint:js-fix": "eslint --fix --ext .js src",
+    "test": "jest tests/*",
+    "test:coverage": "yarn test -- --coverage",
+    "test:watch": "yarn test -- --watchAll"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.1",
+    "hbs": "^4.0.1",
+    "morgan": "~1.8.1",
+    "node-sass-middleware": "^0.11.0",
+    "serve-favicon": "~2.4.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "jest": "^21.2.1",
+    "nodemon": "^1.12.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js",
+      "!src/config/*"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  }
+}
