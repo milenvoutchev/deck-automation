@@ -3,13 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/start.js",
-    "start:dev": "nodemon -w src --exec \"export NODE_ENV=development && npm run lint:js && babel-node src --presets env\"",
-    "start:production": "export NODE_ENV=production && node build",
-    "build": "babel src -d build",
-    "lint:js": "eslint --ext .js src",
-    "lint:js-fix": "eslint --fix --ext .js src",
-    "test": "jest tests/*",
+    "start": "nodemon -w server --exec \"npm run lint && npm run start:dev\"",
+    "start:dev": "export NODE_ENV=development && babel-node ./server/bin/start.js --presets env",
+    "build": "export NODE_ENV=production && babel server -d build/server",
+    "lint": "eslint --ext .js server",
+    "lint:fix": "eslint --fix --ext .js server",
+    "test": "jest server/tests/*",
     "test:coverage": "yarn test -- --coverage",
     "test:watch": "yarn test -- --watchAll"
   },
@@ -28,17 +27,19 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-preset-env": "^1.6.0",
-    "eslint": "^4.8.0",
+    "eslint": "^4.3.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1"
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js",
-      "!src/config/*"
+      "server/**/*.js",
+      "!server/index.js",
+      "!server/config/*"
     ]
   },
   "babel": {
