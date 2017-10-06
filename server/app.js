@@ -1,16 +1,17 @@
 /* eslint no-use-before-define: 0 */
 /* eslint no-unused-vars: 0 */
 
-const express = require('express');
-const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const sassMiddleware = require('node-sass-middleware');
+import express from 'express';
+import path from 'path';
+// import favicon from 'serve-favicon';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import sassMiddleware from 'node-sass-middleware';
 
-const index = require('./routes/index');
-const users = require('./routes/users');
+import indexRouter from './routes/index';
+import cardsRouter from './routes/cards';
+import listRouter from './routes/list';
 
 const app = express();
 
@@ -32,8 +33,9 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/', indexRouter);
+app.use('/cards', cardsRouter);
+app.use('/list', listRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

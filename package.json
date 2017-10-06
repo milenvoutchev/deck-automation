@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon -w server --exec \"npm run lint && npm run start:dev\"",
-    "start:dev": "export NODE_ENV=development && babel-node ./server/bin/start.js --presets env",
-    "build": "export NODE_ENV=production && babel server -d build/server",
+    "start:dev": "NODE_ENV=development babel-node ./server/bin/start.js --presets env",
+    "build": "NODE_ENV=production babel server -d build/server",
     "lint": "eslint --ext .js server",
     "lint:fix": "eslint --fix --ext .js server",
     "test": "jest server/tests/*",
