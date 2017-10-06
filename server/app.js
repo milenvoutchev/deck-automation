@@ -7,6 +7,8 @@ import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import sassMiddleware from 'node-sass-middleware';
+import mongoose from 'mongoose';
+import config from './config';
 
 import indexRouter from './routes/index';
 import cardsRouter from './routes/cards';
@@ -18,7 +20,6 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after placing your favicon in /public
 app.use(logger('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -51,5 +52,12 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// setup db
+mongoose.connect(config.mongoDB.URI, {
+  useMongoClient: true,
+});
+const db = mongoose.connection;
+db.on('error', (error) => console.error('DB error:', error));
 
 module.exports = app;
