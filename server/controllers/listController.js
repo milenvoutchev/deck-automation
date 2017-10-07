@@ -1,3 +1,6 @@
+import List from '../models/list';
+import { respondCreated } from '../helpers/responseHelper';
+
 const listAction = (request, response) => {
   response.send('NOT IMPLEMENTED: listAction');
 };
@@ -10,8 +13,15 @@ const clearAction = (request, response) => {
   response.send('NOT IMPLEMENTED: clearAction');
 };
 
+const createAction = (request, response, next) => {
+  List.create(request.body)
+    .then(list => respondCreated(response, list))
+    .catch(error => next(error));
+};
+
 export default {
   listAction,
   exportAction,
   clearAction,
+  createAction,
 };

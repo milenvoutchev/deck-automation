@@ -62,3 +62,6 @@ server/public/stylesheets/*.css*
 
 # IDE
 .idea/
+
+# production build
+build

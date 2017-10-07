@@ -10,9 +10,10 @@ import sassMiddleware from 'node-sass-middleware';
 import mongoose from 'mongoose';
 import config from './config';
 
-import indexRouter from './routes/index';
+import homeRouter from './routes/home';
 import cardsRouter from './routes/cards';
 import listRouter from './routes/list';
+import researchRouter from './routes/research';
 
 const app = express();
 
@@ -31,9 +32,10 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', homeRouter);
 app.use('/cards', cardsRouter);
 app.use('/list', listRouter);
+app.use('/research', researchRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -54,6 +56,7 @@ app.use((err, req, res, next) => {
 });
 
 // setup db
+mongoose.Promise = Promise;
 mongoose.connect(config.mongoDB.URI, {
   useMongoClient: true,
 });

@@ -26,5 +26,6 @@ module.exports = {
       }
     ],
     'import/no-named-as-default': 0,
+    'no-trailing-spaces': 1,
   },
 };
