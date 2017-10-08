@@ -1,9 +1,13 @@
 import asyncMiddleware from '../helpers/asyncMiddleware';
-import { wiktionaryService } from '../services';
+import { wiktionaryService, oxfordService } from '../services';
 
 const indexAction = asyncMiddleware(async (request, response) => {
-  const researchData = await wiktionaryService.getWord(request.params.word);
-  response.json(researchData);
+  const wiktionaryData = await wiktionaryService.getWord(request.params.word);
+  const oxfordData = await oxfordService.getWord(request.params.word);
+
+  const results = { ...wiktionaryData, ...oxfordData };
+
+  response.json(results);
 });
 
 export default {

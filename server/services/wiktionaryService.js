@@ -11,7 +11,7 @@ class WiktionaryService {
     this.languageShort = 'de';
   }
 
-  async fetchWordData(word) {
+  async fetchRawData(word) {
     const getUri = query => `https://${this.languageShort}.wiktionary.org/w/api.php?format=json&action=parse&prop=wikitext|categories|parsetree&redirects=1&contentmodel=wikitext&page=${query}`;
     const wiktionaryResponse = await got(getUri(word), { json: true });
     const error = wiktionaryResponse.body.error;
@@ -23,7 +23,8 @@ class WiktionaryService {
   }
 
   async getWord(word) {
-    const wordData = await this.fetchWordData(word);
+    console.log('WiktionaryService.getWord');
+    const wordData = await this.fetchRawData(word);
     const wikitext = wordData.parse.wikitext['*'];
     const wordType = WiktionaryService.getWordType(wikitext);
 

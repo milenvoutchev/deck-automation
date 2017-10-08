@@ -30,6 +30,7 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
     "eslint": "^4.3.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",
@@ -46,7 +47,9 @@
     ]
   },
   "nodemonConfig": {
-    "ignore": ["server/tests/*"],
+    "ignore": [
+      "server/tests/*"
+    ],
     "delay": "250"
   }
 }
