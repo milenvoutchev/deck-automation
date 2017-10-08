@@ -1,5 +1,10 @@
 import got from 'got';
-import convert from 'xml-js';
+
+const WORD_TYPE_VERB = 'Verb';
+const WORD_TYPE_NOUN = 'Substantiv';
+const wordTypes = [WORD_TYPE_VERB, WORD_TYPE_NOUN];
+
+// @TODO extract/inject language-specific rules as adapter/strategy
 
 class WiktionaryService {
   constructor() {
@@ -7,7 +12,8 @@ class WiktionaryService {
   }
 
   async fetchWordData(word) {
-    const wiktionaryResponse = await got(this.getQuery(word), { json: true });
+    const getUri = query => `https://${this.languageShort}.wiktionary.org/w/api.php?format=json&action=parse&prop=wikitext|categories|parsetree&redirects=1&contentmodel=wikitext&page=${query}`;
+    const wiktionaryResponse = await got(getUri(word), { json: true });
     const error = wiktionaryResponse.body.error;
     if (error) {
       throw new Error(`Error fetching word data: ${error.info}`);
@@ -18,33 +24,81 @@ class WiktionaryService {
 
   async getWord(word) {
     const wordData = await this.fetchWordData(word);
-    this.parsetree = wordData.parse.parsetree['*'];
-    this.wikitext = wordData.parse.wikitext['*'];
-    this.json = convert.xml2js(this.parsetree, { ignoreComment: true, addParent: true });
+    const wikitext = wordData.parse.wikitext['*'];
+    const wordType = WiktionaryService.getWordType(wikitext);
+
+    if (!wordTypes.includes(wordType)) {
+      throw new Error(`Unknown word type: ${wordType}`);
+    }
 
     return {
-      word_de: this.getWordDe(),
-      word_en: this.getWordEn(),
-      genus: this.getGenus(),
+      word_de: WiktionaryService.getWordDe(wikitext),
+      word_en: WiktionaryService.getWordEn(wikitext),
+      word_type: WiktionaryService.getWordType(wikitext),
+      lautschrift: WiktionaryService.getLautschrift(wikitext),
+      verb_present_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : '',
+      verb_preterite_first_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : '',
+      verb_preterite_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : '', // we take 1st person, as it seems to be the same as 3rd person most of the time
+      verb_perfect_auxiliary_3rd: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : '',
+      verb_past_participle: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : '',
+      noun_article: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : '',
+      noun_plural: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : '',
+      noun_gender: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : '',
     };
   }
 
-  getQuery(word) {
-    return `https://${this.languageShort}.wiktionary.org/w/api.php?format=json&action=parse&prop=wikitext|categories|parsetree&redirects=1&contentmodel=wikitext&page=${word}`;
+  static getWordType(wikitext) {
+    return wikitext.match(/{{Wortart\|(\w+)\|Deutsch}}/)[1];
   }
 
-  getWordDe() {
-    return this.wikitext.match(/\|Nominativ Singular=(\w+)\n\|/)[1];
+  static getWordDe(wikitext) {
+    return wikitext.match(/== ([A-zÀ-ÿ]+) \({{Sprache\|Deutsch}}\)/)[1]; // match accented words
   }
-  getWordEn() {
+
+  static getWordEn(wikitext) {
     const re = /{{Ü\|en\|(\w+)}}/g;
-    const found = this.wikitext.match(re)
+    const found = wikitext.match(re)
       .map(fullMatch => fullMatch.match(/{{Ü\|en\|(\w+)}}/)[1]);
 
     return found.join(', ');
   }
-  getGenus() {
-    return this.wikitext.match(/\|Genus=(\w+)\n\|/i)[1];
+
+  static getLautschrift(wikitext) {
+    return wikitext.match(/{{Lautschrift\|(\S+)}}\n/i)[1];
+  }
+
+  static getVerbPresentThirdPerson(wikitext) {
+    return wikitext.match(/\|Präsens_er, sie, es=([A-zÀ-ÿ ]+)\n\|/i)[1];
+  }
+
+  static getVerbPreteriteFirstPerson(wikitext) {
+    return wikitext.match(/\|Präteritum_ich=([A-zÀ-ÿ ]+)\n\|/i)[1];
+  }
+
+  static getVerbPerfectAuxiliaryThirdPerson(wikitext) {
+    const auxilaryVerb = wikitext.match(/\|Hilfsverb=(\w+)\n}}/i)[1];
+    return auxilaryVerb === 'haben' ? 'hat' : 'ist';
+  }
+
+  static getVerbPastParticiple(wikitext) {
+    return wikitext.match(/\|Partizip II=([A-zÀ-ÿ ]+)\n\|/i)[1];
+  }
+
+  static getNounArticle(wikitext) {
+    const genusToArticle = {
+      m: 'der',
+      f: 'die',
+      n: 'das',
+    };
+    return genusToArticle[WiktionaryService.getNounGender(wikitext)];
+  }
+
+  static getNounPlural(wikitext) {
+    return wikitext.match(/\|Nominativ Plural=([A-zÀ-ÿ ]+)\n\|/i)[1];
+  }
+
+  static getNounGender(wikitext) {
+    return wikitext.match(/\|Genus=(\w+)\n\|/i)[1];
   }
 }
 
