@@ -31,6 +31,8 @@ class WiktionaryService {
       throw new Error(`Unknown word type: ${wordType}`);
     }
 
+    WiktionaryService.getExamples(wikitext);
+
     return {
       word_de: WiktionaryService.getWordDe(wikitext),
       word_en: WiktionaryService.getWordEn(wikitext),
@@ -44,6 +46,7 @@ class WiktionaryService {
       noun_article: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null,
       noun_plural: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null,
       noun_gender: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null,
+      usages: WiktionaryService.getExamples(wikitext) || [],
     };
   }
 
@@ -56,11 +59,9 @@ class WiktionaryService {
   }
 
   static getWordEn(wikitext) {
-    const re = /{{Ü\|en\|(\w+)}}/g;
-    const found = wikitext.match(re)
-      .map(fullMatch => fullMatch.match(/{{Ü\|en\|(\w+)}}/)[1]);
+    const senses = WiktionaryService.getSenses(wikitext).map(sense => sense.value);
 
-    return found.join(', ');
+    return senses.join(', ');
   }
 
   static getLautschrift(wikitext) {
@@ -99,6 +100,50 @@ class WiktionaryService {
 
   static getNounGender(wikitext) {
     return wikitext.match(/\|Genus=(\w+)\n\|/i)[1];
+  }
+
+  static getSenses(wikitext) {
+    const mathedSenses = wikitext.match(/\[\d+] {{Ü\|en\|[\w\s]+}}/g);
+
+    return mathedSenses.map(raw => {
+      const matches = raw.match(/(\[\d+]) {{Ü\|en\|([\w\s]+)}}/);
+      return {
+        id: matches[1],
+        value: matches[2],
+      };
+    });
+  }
+
+  static removeTagAndContents(text, tag) {
+    const re = new RegExp(`<${tag}>.+?<\\/${tag}>`, 'g');
+
+    return text.replace(re, '');
+  }
+
+  static getExamples(wikitext) {
+    const examplesContainer = WiktionaryService
+      .removeTagAndContents(wikitext, 'ref') // remove quote references
+      .replace(/{{Beispiele fehlen\|spr=de}}/, '') // clean "empty" example, as we use '^{' in the regex below
+      .match(/{{Beispiele}}\n:([^{]+)/i); // match until next '{'
+    const examples = examplesContainer[1].split('\n:');
+
+    const examplesStructured = examples
+      .map(exampleRaw => {
+        const matches = exampleRaw.match(/(\[\d+]) (.+)/);
+
+        if (!matches) {
+          return null; // sometimes we get empty examples (e.g. when cleaned above)
+        }
+
+        return {
+          sense: matches[1],
+          value: matches[2],
+        };
+      });
+
+    return examplesStructured
+      .filter(example => !!example) // remove empty
+      .map(example => example.value);
   }
 }
 

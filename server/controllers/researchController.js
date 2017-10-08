@@ -1,3 +1,4 @@
+import defaultsDeep from 'lodash/defaultsDeep';
 import asyncMiddleware from '../helpers/asyncMiddleware';
 import { wiktionaryService, oxfordService } from '../services';
 
@@ -6,10 +7,7 @@ const indexAction = asyncMiddleware(async (request, response) => {
   const wiktionaryData = wiktionaryService.getWord(request.params.word);
 
   // run both parallel
-  const results = {
-    ...await oxfordData,
-    ...await wiktionaryData,
-  };
+  const results = defaultsDeep(await wiktionaryData, await oxfordData);
 
   response.json(results);
 });
