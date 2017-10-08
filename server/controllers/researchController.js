@@ -2,10 +2,14 @@ import asyncMiddleware from '../helpers/asyncMiddleware';
 import { wiktionaryService, oxfordService } from '../services';
 
 const indexAction = asyncMiddleware(async (request, response) => {
-  const wiktionaryData = await wiktionaryService.getWord(request.params.word);
-  const oxfordData = await oxfordService.getWord(request.params.word);
+  const oxfordData = oxfordService.getWord(request.params.word);
+  const wiktionaryData = wiktionaryService.getWord(request.params.word);
 
-  const results = { ...wiktionaryData, ...oxfordData };
+  // run both parallel
+  const results = {
+    ...await oxfordData,
+    ...await wiktionaryData,
+  };
 
   response.json(results);
 });

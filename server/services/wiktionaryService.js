@@ -23,7 +23,6 @@ class WiktionaryService {
   }
 
   async getWord(word) {
-    console.log('WiktionaryService.getWord');
     const wordData = await this.fetchRawData(word);
     const wikitext = wordData.parse.wikitext['*'];
     const wordType = WiktionaryService.getWordType(wikitext);
@@ -37,14 +36,14 @@ class WiktionaryService {
       word_en: WiktionaryService.getWordEn(wikitext),
       word_type: WiktionaryService.getWordType(wikitext),
       lautschrift: WiktionaryService.getLautschrift(wikitext),
-      verb_present_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : '',
-      verb_preterite_first_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : '',
-      verb_preterite_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : '', // we take 1st person, as it seems to be the same as 3rd person most of the time
-      verb_perfect_auxiliary_3rd: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : '',
-      verb_past_participle: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : '',
-      noun_article: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : '',
-      noun_plural: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : '',
-      noun_gender: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : '',
+      verb_present_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null,
+      verb_preterite_first_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null,
+      verb_preterite_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null, // we take 1st person, as it seems to be the same as 3rd person most of the time
+      verb_perfect_auxiliary_3rd: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : null,
+      verb_past_participle: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : null,
+      noun_article: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null,
+      noun_plural: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null,
+      noun_gender: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null,
     };
   }
 
