@@ -1,17 +1,35 @@
-import defaultsDeep from 'lodash/defaultsDeep';
 import asyncMiddleware from '../helpers/asyncMiddleware';
-import { wiktionaryService, oxfordService } from '../services';
+import { researchService } from '../services';
+
+const concatExamplesByLanguage = (examples, language) =>
+  examples
+    .map(example => example[language])
+    .filter(element => !!element)
+    .join(', ');
 
 const indexAction = asyncMiddleware(async (request, response) => {
-  const oxfordData = oxfordService.getWord(request.params.word);
-  const wiktionaryData = wiktionaryService.getWord(request.params.word);
+  const word = request.query.q;
+  const wordResearch = await researchService.getWordResearch(word);
+
+  const exampleSentenceDe = concatExamplesByLanguage(wordResearch.examples, 'de');
+  const exampleSentenceEn = concatExamplesByLanguage(wordResearch.examples, 'en');
+
+  response.render('research', {
+    ...wordResearch,
+    exampleSentenceDe,
+    exampleSentenceEn,
+  });
+});
+
+const jsonAction = asyncMiddleware(async (request, response) => {
+  const word = request.query.q;
+  const wordResearch = await researchService.getWordResearch(word);
 
   // run both parallel
-  const results = defaultsDeep(await wiktionaryData, await oxfordData);
-
-  response.json(results);
+  response.json(wordResearch);
 });
 
 export default {
   indexAction,
+  jsonAction,
 };

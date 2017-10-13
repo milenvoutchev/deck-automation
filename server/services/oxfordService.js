@@ -1,4 +1,5 @@
 import got from 'got';
+import WordResearch from '../dto/WordResearch';
 
 class OxfordService {
   constructor(config) {
@@ -32,9 +33,10 @@ class OxfordService {
     const examples = OxfordService.getExamples(results)
       .map(example => OxfordService.getFormattedExample(example, this.sourceLanguage));
 
-    return {
-      examples,
-    };
+    const wordResearch = new WordResearch();
+    wordResearch.examples = examples;
+
+    return wordResearch;
   }
 
   static getExamples(results) {

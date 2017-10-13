@@ -1,4 +1,4 @@
-import List from '../models/list';
+import List from '../models/List';
 import { respondCreated } from '../helpers/responseHelper';
 
 const listAction = (request, response) => {

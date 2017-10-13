@@ -1,4 +1,5 @@
 import got from 'got';
+import WordResearch from '../dto/WordResearch';
 
 const WORD_TYPE_VERB = 'Verb';
 const WORD_TYPE_NOUN = 'Substantiv';
@@ -31,23 +32,22 @@ class WiktionaryService {
       throw new Error(`Unknown word type: ${wordType}`);
     }
 
-    WiktionaryService.getExamples(wikitext);
+    const wordResearch = new WordResearch();
+    wordResearch.wordDe = WiktionaryService.getWordDe(wikitext);
+    wordResearch.wordEn = WiktionaryService.getWordEn(wikitext);
+    wordResearch.wordType = WiktionaryService.getWordType(wikitext);
+    wordResearch.lautschrift = WiktionaryService.getLautschrift(wikitext);
+    wordResearch.verbPresentThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null;
+    wordResearch.verbPreteriteFirstPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null;
+    wordResearch.verbPreteriteThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null; // we take 1st person, as it seems to be the same as 3rd person most of the time
+    wordResearch.verbPerfectAuxiliaryThird = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : null;
+    wordResearch.verbPastParticiple = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : null;
+    wordResearch.nounArticle = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null;
+    wordResearch.nounPlural = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null;
+    wordResearch.nounGender = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null;
+    wordResearch.usages = WiktionaryService.getExamples(wikitext, this.languageShort) || [];
 
-    return {
-      word_de: WiktionaryService.getWordDe(wikitext),
-      word_en: WiktionaryService.getWordEn(wikitext),
-      word_type: WiktionaryService.getWordType(wikitext),
-      lautschrift: WiktionaryService.getLautschrift(wikitext),
-      verb_present_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null,
-      verb_preterite_first_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null,
-      verb_preterite_third_person: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null, // we take 1st person, as it seems to be the same as 3rd person most of the time
-      verb_perfect_auxiliary_3rd: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : null,
-      verb_past_participle: wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : null,
-      noun_article: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null,
-      noun_plural: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null,
-      noun_gender: wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null,
-      usages: WiktionaryService.getExamples(wikitext) || [],
-    };
+    return wordResearch;
   }
 
   static getWordType(wikitext) {
@@ -120,7 +120,7 @@ class WiktionaryService {
     return text.replace(re, '');
   }
 
-  static getExamples(wikitext) {
+  static getExamples(wikitext, languageShort) {
     const examplesContainer = WiktionaryService
       .removeTagAndContents(wikitext, 'ref') // remove quote references
       .replace(/{{Beispiele fehlen\|spr=de}}/, '') // clean "empty" example, as we use '^{' in the regex below
@@ -139,11 +139,15 @@ class WiktionaryService {
           sense: matches[1],
           value: matches[2],
         };
-      });
+      })
+      .filter(example => !!example); // remove empty
 
     return examplesStructured
-      .filter(example => !!example) // remove empty
-      .map(example => example.value);
+      .map(example => { // eslint-disable-line arrow-body-style
+        return {
+          [languageShort]: example.value,
+        };
+      });
   }
 }
 
