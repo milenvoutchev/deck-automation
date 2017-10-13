@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nodemon -w server --exec \"npm run lint && npm run start:dev\"",
     "start:dev": "NODE_ENV=development babel-node ./server/bin/start.js --presets env",
+    "start:nolint": "nodemon -w server --exec \"npm run start:dev\"",
     "build": "NODE_ENV=production babel server -d build/server",
     "lint": "eslint --ext .js server",
     "lint:fix": "eslint --fix --ext .js server",

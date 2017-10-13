@@ -7,7 +7,7 @@
  */
 
 const app = require('../app');
-const debug = require('debug')('deck-automation:server');
+// const debug = require('debug')('deck-automation:server');
 const http = require('http');
 
 /**
