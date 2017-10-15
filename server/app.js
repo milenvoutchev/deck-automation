@@ -8,8 +8,8 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import sassMiddleware from 'node-sass-middleware';
 import mongoose from 'mongoose';
+import expressValidator from 'express-validator';
 import config from './config';
-
 import homeRouter from './routes/home';
 import cardsRouter from './routes/cards';
 import listRouter from './routes/list';
@@ -21,9 +21,9 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.use(logger('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
@@ -31,6 +31,7 @@ app.use(sassMiddleware({
   sourceMap: true,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
 
 app.use('/', homeRouter);
 app.use('/cards', cardsRouter);

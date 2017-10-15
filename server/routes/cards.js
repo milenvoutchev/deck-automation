@@ -4,10 +4,10 @@ import cardController from '../controllers/cardController';
 const router = express.Router();
 
 router.get('/', cardController.listAction);
-
-router.get('/create', cardController.createAction);
+router.get('/purge', cardController.purgeAction);
+router.post('/purge', cardController.purgeAction);
 router.post('/create', cardController.createAction);
-
-router.get('/:id', cardController.detailAction);
+router.get('/:id', cardController.updateAction);
+router.post('/:id', cardController.updateAction);
 
 export default router;

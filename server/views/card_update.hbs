@@ -1,7 +1,7 @@
 <h1>{{wordDe}}</h1>
 
 <section>
-    <form action="/cards/create" method="post">
+    <form method="post">
         <div><input name="wordDe" value="{{wordDe}}"></div>
         <div><input name="wordEn" value="{{wordEn}}"></div>
         <div><input name="lautschrift" value="{{lautschrift}}"></div>
@@ -17,8 +17,10 @@
         <div><textarea name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
         <div><textarea name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
 
+        <div><input name="_id" value="{{_id }}"></div>
+
         <div>
-            <button>Create Card</button>
+            <button>Update</button>
         </div>
     </form>
 </section>

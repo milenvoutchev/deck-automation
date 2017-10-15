@@ -1,0 +1,13 @@
+<h1>{{title}}</h1>
+
+<ul>
+{{#each cards}}
+    <li>
+        <span>{{isStaged}}</span>
+        <span>{{wordDe}}</span>
+        <span>{{wordEn}}</span>
+        <span>[<a href="{{url}}">edit</a>]</span>
+        <span>[<a href="{{_id}}">delete</a>]</span>
+    </li>
+{{/each}}
+</ul>
