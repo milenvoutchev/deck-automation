@@ -1,4 +1,5 @@
-import { cardService } from '../services';
+import { cardService, exportService } from '../services';
+import CardService from '../services/cardService';
 import asyncMiddleware from '../helpers/asyncMiddleware';
 
 // @TODO is there no better way?
@@ -34,7 +35,7 @@ const validateCardInBody = (request) => {
 };
 
 const listAction = asyncMiddleware(async (request, response) => {
-  const cards = await cardService.fetchAll();
+  const cards = await cardService.fetchAll(CardService.PROJECTION_SHORT);
   response.render('card_list', { title: 'Cards', cards });
 });
 
@@ -84,9 +85,20 @@ const createAction = asyncMiddleware(async (request, response) => {
   return response.send(card);
 });
 
+const exportAction = asyncMiddleware(async (request, response) => {
+  const cards = await cardService.fetchStaged();
+
+  const { content, format } = exportService.getExported(cards);
+  const now = new Date().getTime(); // no need for hrtime, I reckon
+
+  response.attachment(`staged-${now}.${format}`);
+  response.send(content);
+});
+
 export default {
   listAction,
   createAction,
   purgeAction,
   updateAction,
+  exportAction,
 };

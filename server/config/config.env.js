@@ -9,4 +9,7 @@ module.exports = {
     appId: process.env.OXFORD_APP_ID,
     appKey: process.env.OXFORD_APP_KEY,
   },
+  export: {
+    fields: process.env.EXPORT_FIELDS,
+  },
 };
