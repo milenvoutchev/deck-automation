@@ -7,7 +7,17 @@ const CardSchema = Schema(
     isStaged: { type: Boolean, required: true, default: true },
     wordDe: { type: String, required: true, max: 100 },
     wordEn: { type: String, required: true, max: 100 },
-    exampleSentenceDe: { type: String }, // array ofStrings?
+    lautschrift: { type: String },
+    wordType: { type: String },
+    verbPresentThirdPerson: { type: String },
+    verbPreteriteFirstPerson: { type: String },
+    verbPreteriteThirdPerson: { type: String },
+    verbPerfectAuxiliaryThird: { type: String },
+    verbPastParticiple: { type: String },
+    nounArticle: { type: String },
+    nounPlural: { type: String },
+    nounGender: { type: String },
+    exampleSentenceDe: { type: String },
     exampleSentenceEn: { type: String },
   },
 );

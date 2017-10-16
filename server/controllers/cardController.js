@@ -1,4 +1,4 @@
-import Card from '../models/Card';
+import { cardService } from '../services';
 import asyncMiddleware from '../helpers/asyncMiddleware';
 
 // @TODO is there no better way?
@@ -9,20 +9,38 @@ const validateCardInBody = (request) => {
   request.sanitize('wordDe').trim();
   request.sanitize('wordEn').escape();
   request.sanitize('wordEn').trim();
-  request.sanitize('exampleSentenceDe').escape();
+  request.sanitize('lautschrift').escape();
+  request.sanitize('lautschrift').trim();
+  request.sanitize('wordType').escape();
+  request.sanitize('wordType').trim();
+  request.sanitize('verbPresentThirdPerson').escape();
+  request.sanitize('verbPresentThirdPerson').trim();
+  request.sanitize('verbPreteriteFirstPerson').escape();
+  request.sanitize('verbPreteriteFirstPerson').trim();
+  request.sanitize('verbPreteriteThirdPerson').escape();
+  request.sanitize('verbPreteriteThirdPerson').trim();
+  request.sanitize('verbPerfectAuxiliaryThird').escape();
+  request.sanitize('verbPerfectAuxiliaryThird').trim();
+  request.sanitize('verbPastParticiple').escape();
+  request.sanitize('verbPastParticiple').trim();
+  request.sanitize('nounArticle').escape();
+  request.sanitize('nounArticle').escape();
+  request.sanitize('nounPlural').escape();
+  request.sanitize('nounPlural').escape();
+  request.sanitize('nounGender').escape();
+  request.sanitize('nounGender').trim();
   request.sanitize('exampleSentenceDe').trim();
-  request.sanitize('exampleSentenceEn').escape();
   request.sanitize('exampleSentenceEn').trim();
 };
 
 const listAction = asyncMiddleware(async (request, response) => {
-  const cards = await Card.find({}, 'isStaged wordDe wordEn url');
+  const cards = await cardService.fetchAll();
   response.render('card_list', { title: 'Cards', cards });
 });
 
 const purgeAction = asyncMiddleware(async (request, response) => {
   if (request.method === 'POST') {
-    const result = await Card.deleteMany({});
+    const result = await cardService.purge();
     return response.send(`Purged ${result.deletedCount} cards.`);
   }
   return response.render('purge');
@@ -37,15 +55,12 @@ const updateAction = asyncMiddleware(async (request, response) => {
       throw new Error(`Validation error: ${errors[0].msg}`);
     }
 
-    const result = await Card.findByIdAndUpdate(request.body._id, request, { // eslint-disable-line no-underscore-dangle
-      new: true,
-    });
-    return response.send(result);
-  }
-  console.log(request.params);
+    const card = await cardService.fetchByIdAndUpdate(request.body._id, request.body); // eslint-disable-line no-underscore-dangle
 
-  const card = await Card.findById(request.params.id); // eslint-disable-line no-underscore-dangle
-  console.log(card.wordDe);
+    return response.send(card);
+  }
+
+  const card = await cardService.fetchById(request.params.id);
 
   return response.render('card_update', card);
 });
@@ -58,29 +73,19 @@ const createAction = asyncMiddleware(async (request, response) => {
     throw new Error(`Validation error: ${errors[0].msg}`);
   }
 
-  const foundCard = await Card.findOne({ wordDe: request.body.wordDe });
+  const foundCard = await cardService.fetchOne({ wordDe: request.body.wordDe });
   if (foundCard) {
     console.log(`Already existing Card: ${foundCard.wordDe}`);
     return response.redirect(foundCard.url);
   }
 
-  const card = await Card.create({
-    wordDe: request.body.wordDe,
-    wordEn: request.body.wordEn,
-    exampleSentenceDe: request.body.exampleSentenceDe,
-    exampleSentenceEn: request.body.exampleSentenceEn,
-  });
+  const card = await cardService.create(request.body);
 
   return response.send(card);
 });
 
-const detailAction = (request, response) => {
-  response.send('NOT IMPLEMENTED: detailAction');
-};
-
 export default {
   listAction,
-  detailAction,
   createAction,
   purgeAction,
   updateAction,

@@ -9,15 +9,16 @@ import bodyParser from 'body-parser';
 import sassMiddleware from 'node-sass-middleware';
 import mongoose from 'mongoose';
 import expressValidator from 'express-validator';
+import hbs from 'hbs';
 import config from './config';
 import homeRouter from './routes/home';
 import cardsRouter from './routes/cards';
 import listRouter from './routes/list';
 import researchRouter from './routes/research';
 
-const app = express();
+hbs.registerPartials(`${__dirname}/views/partials`);
 
-// view engine setup
+const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 

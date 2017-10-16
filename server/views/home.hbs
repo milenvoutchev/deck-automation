@@ -10,6 +10,17 @@
 </section>
 
 <section>
-    <p>We have <b>{{countCardStaged}}</b> / {{countCard}} staged cards.</p>
-    <p>And <b>{{countList}}</b> lists.</p>
+    <h2>Staged cards</h2>
+    <p>We have <b>{{countStaged}}</b> / {{countCard}} staged cards.</p>
+    <ul>
+        {{#each cards}}
+            <li>
+                <span>{{isStaged}}</span>
+                <span>{{wordDe}}</span>
+                <span>{{wordEn}}</span>
+                <span>[<a href="{{url}}">edit</a>]</span>
+                <span>[<a href="{{_id}}">delete</a>]</span>
+            </li>
+        {{/each}}
+    </ul>
 </section>
