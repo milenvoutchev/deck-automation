@@ -3,17 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -w server --exec \"npm run lint && npm run start:dev\"",
-    "start:dev": "NODE_ENV=development babel-node ./server/bin/start.js",
-    "start:nolint": "nodemon -w server --exec \"npm run start:dev\"",
-    "build": "NODE_ENV=production babel server -d build/server",
+    "postinstall": "scripts/postinstall.sh",
+    "prod:build": "babel server -d build",
+    "prod:start": "node ./build/bin/start.js",
+    "dev:watch": "nodemon -w server --exec \"npm run lint && npm rundev:start\"",
+    "dev:start": "NODE_ENV=development babel-node ./server/bin/start.js",
+    "dev:nolint": "nodemon -w server --exec \"npm run start:dev\"",
     "lint": "eslint --ext .js server",
     "lint:fix": "eslint --fix --ext .js server",
     "test": "jest server/tests/*",
-    "test:coverage": "yarn test -- --coverage",
-    "test:watch": "yarn test -- --watchAll"
+    "test:coverage": "npm run test -- --coverage",
+    "test:watch": "npm run test -- --watchAll"
   },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
@@ -30,10 +35,7 @@
     "xml-js": "^1.5.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-2": "^6.24.1",
     "eslint": "^4.3.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.7.0",

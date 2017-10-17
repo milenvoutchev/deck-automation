@@ -16,7 +16,7 @@ import cardsRouter from './routes/cards';
 import listRouter from './routes/list';
 import researchRouter from './routes/research';
 
-hbs.registerPartials(`${__dirname}/views/partials`);
+hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
 const app = express();
 app.set('views', path.join(__dirname, 'views'));
