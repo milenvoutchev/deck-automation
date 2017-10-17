@@ -5,7 +5,7 @@ const WORD_TYPE_VERB = 'Verb';
 const WORD_TYPE_NOUN = 'Substantiv';
 const wordTypes = [WORD_TYPE_VERB, WORD_TYPE_NOUN];
 
-// @TODO extract/inject language-specific rules as adapter/strategy
+// @TODO extract/inject language-specific rules as adapter/strategy/config
 
 class WiktionaryService {
   constructor() {
