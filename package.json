@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "scripts/postinstall.sh",
     "prod:build": "babel server -d build",
-    "prod:start": "babel-node ./build/bin/start.js",
+    "prod:start": "node ./build/bin/start.js",
     "dev:watch": "nodemon -w server --exec \"yarn lint && yarn dev:start\"",
     "dev:start": "NODE_ENV=development babel-node ./server/bin/start.js",
     "dev:nolint": "nodemon -w server --exec \"npm run start:dev\"",
