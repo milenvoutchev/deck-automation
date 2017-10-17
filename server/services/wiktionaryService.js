@@ -26,8 +26,8 @@ class WiktionaryService {
   async getWord(word) {
     const wordData = await this.fetchRawData(word);
     const wikitext = wordData.parse.wikitext['*'];
-    const wordType = WiktionaryService.getWordType(wikitext);
 
+    const wordType = WiktionaryService.getWordType(wikitext);
     if (!wordTypes.includes(wordType)) {
       throw new Error(`Unknown word type: ${wordType}`);
     }

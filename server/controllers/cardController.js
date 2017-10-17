@@ -1,4 +1,4 @@
-import { cardService, exportService } from '../services';
+import { cardService, exportService, researchService } from '../services';
 import CardService from '../services/cardService';
 import asyncMiddleware from '../helpers/asyncMiddleware';
 
@@ -25,12 +25,12 @@ const validateCardInBody = (request) => {
   request.sanitize('verbPastParticiple').escape();
   request.sanitize('verbPastParticiple').trim();
   request.sanitize('nounArticle').escape();
-  request.sanitize('nounArticle').escape();
+  request.sanitize('nounArticle').trim();
   request.sanitize('nounPlural').escape();
-  request.sanitize('nounPlural').escape();
+  request.sanitize('nounPlural').trim();
   request.sanitize('nounGender').escape();
   request.sanitize('nounGender').trim();
-  request.sanitize('exampleSentenceDe').trim();
+  request.sanitize('exampleSentenceDe').escape();
   request.sanitize('exampleSentenceEn').trim();
 };
 
@@ -67,22 +67,41 @@ const updateAction = asyncMiddleware(async (request, response) => {
 });
 
 const createAction = asyncMiddleware(async (request, response) => {
-  validateCardInBody(request);
+  if (request.method === 'POST') {
+    validateCardInBody(request);
 
-  const errors = request.validationErrors();
-  if (errors) {
-    throw new Error(`Validation error: ${errors[0].msg}`);
+    const errors = request.validationErrors();
+    if (errors) {
+      throw new Error(`Validation error: ${errors[0].msg}`);
+    }
+
+    const foundCard = await cardService.fetchOne({ wordDe: request.body.wordDe });
+    if (foundCard) {
+      console.log(`Already existing Card: ${foundCard.wordDe}`);
+      return response.redirect(foundCard.url);
+    }
+
+    const card = await cardService.create(request.body);
+    console.log(`Created card:${card._id}`); // eslint-disable-line no-underscore-dangle
+
+    return response.redirect('/');
   }
 
-  const foundCard = await cardService.fetchOne({ wordDe: request.body.wordDe });
-  if (foundCard) {
-    console.log(`Already existing Card: ${foundCard.wordDe}`);
-    return response.redirect(foundCard.url);
-  }
+  request.sanitize('q').escape().trim();
 
-  const card = await cardService.create(request.body);
+  const word = request.query.q;
+  const wordResearch = await researchService.getWordResearch(word);
 
-  return response.send(card);
+  return response.render('research', wordResearch);
+});
+
+const deleteAction = asyncMiddleware(async (request, response) => {
+  // @TODO move to post with confirmation https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms
+
+  const card = await cardService.delete(request.params.id);
+  console.log(`Deleted card:${card._id}`); // eslint-disable-line no-underscore-dangle
+
+  return response.redirect('/');
 });
 
 const exportAction = asyncMiddleware(async (request, response) => {
@@ -101,4 +120,5 @@ export default {
   purgeAction,
   updateAction,
   exportAction,
+  deleteAction,
 };

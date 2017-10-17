@@ -11,14 +11,21 @@ class ResearchService {
     // run both parallel
     const combined = Object.assign({}, await wiktionaryData, await oxfordData);
 
-    console.log((Array.isArray(combined.examples) && Array.isArray(combined.usages)));
-
     if (Array.isArray(combined.examples) && Array.isArray(combined.usages)) {
       combined.examples = combined.examples.concat(combined.usages);
     }
 
+    combined.exampleSentenceDe = ResearchService.concatExamplesByLanguage(combined.examples, 'de');
+    combined.exampleSentenceEn = ResearchService.concatExamplesByLanguage(combined.examples, 'de');
+
     return combined;
   }
+
+  static concatExamplesByLanguage = (examples, language) =>
+    examples
+      .map(example => example[language])
+      .filter(element => !!element)
+      .join(', ');
 }
 
 export default ResearchService;

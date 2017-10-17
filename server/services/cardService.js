@@ -26,6 +26,10 @@ class CardService {
     return this.Card.deleteMany({});
   }
 
+  async delete(id) {
+    return this.Card.findByIdAndRemove(id);
+  }
+
   async fetchByIdAndUpdate(id, update = {}) {
     return this.Card.findByIdAndUpdate(id, update, {
       new: true,

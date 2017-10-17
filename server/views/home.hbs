@@ -2,7 +2,7 @@
 
 <section>
     <div>
-        <form action="/research">
+        <form action="/cards/create">
             <input name="q">
             <button>Research Word</button>
         </form>
@@ -19,7 +19,7 @@
                 <span>{{wordDe}}</span>
                 <span>{{wordEn}}</span>
                 <span>[<a href="{{url}}">edit</a>]</span>
-                <span>[<a href="{{_id}}">delete</a>]</span>
+                <span>[<a href="{{url}}/delete">delete</a>]</span>
             </li>
         {{/each}}
     </ul>

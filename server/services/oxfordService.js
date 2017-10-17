@@ -11,7 +11,7 @@ class OxfordService {
   }
 
   getUri(query) {
-    return `${this.apiURL}/entries/${this.sourceLanguage}/${query}/translations=${this.translationLanguage}`;
+    return `${this.apiURL}/entries/${this.sourceLanguage}/${encodeURIComponent(query)}/translations=${this.translationLanguage}`;
   }
 
   async fetchRawData(word) {
