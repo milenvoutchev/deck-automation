@@ -27,11 +27,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
+  src: path.join(__dirname, '../public'),
+  dest: path.join(__dirname, '../public'),
   sourceMap: true,
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(logger('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
 
 app.use('/', homeRouter);

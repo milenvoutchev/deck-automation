@@ -4,5 +4,6 @@
 npm run prod:build
 
 # link to "static" folders from build (missing, as babel creates only .js files)
-(cd build && ln -s ../server/public public)
-(cd build && ln -s ../server/views views)
+cd build
+rm -rf views && ln -s ../server/views views
+cd ..
