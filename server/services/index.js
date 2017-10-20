@@ -9,7 +9,7 @@ import Card from '../models/Card';
 
 const wiktionaryService = new WiktionaryService();
 const oxfordService = new OxfordService(config.oxford);
-const researchService = new ResearchService(wiktionaryService, oxfordService);
+const researchService = new ResearchService(wiktionaryService, oxfordService, config.research);
 const cardService = new CardService(Card);
 const exportService = new ExportService(config.export);
 
