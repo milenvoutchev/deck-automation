@@ -14,13 +14,18 @@
         <div><input name="nounArticle" value="{{nounArticle}}"></div>
         <div><input name="nounPlural" value="{{nounPlural}}"></div>
         <div><input name="nounGender" value="{{nounGender}}"></div>
-        <div><textarea name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
-        <div><textarea name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
 
-        <div><input type="hidden" name="_id" value="{{_id }}"></div>
+        <div class="row">
+            <div class="col-xs-6"><textarea name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
+            <div class="col-xs-6"><textarea name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
+        </div>
+
+        {{#if _id}}
+            <div><input type="hidden" name="_id" value="{{_id }}"></div>
+        {{/if}}
 
         <div>
-            <button>Update</button>
+            <button>Save</button>
         </div>
     </form>
 </section>

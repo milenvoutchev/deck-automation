@@ -6,33 +6,23 @@ import asyncMiddleware from '../helpers/asyncMiddleware';
 const validateCardInBody = (request) => {
   request.checkBody('wordDe', 'wordDe is required').notEmpty();
   request.checkBody('wordEn', 'wordEn is required').notEmpty();
-  request.sanitize('wordDe').escape();
   request.sanitize('wordDe').trim();
-  request.sanitize('wordEn').escape();
   request.sanitize('wordEn').trim();
-  request.sanitize('lautschrift').escape();
   request.sanitize('lautschrift').trim();
-  request.sanitize('wordType').escape();
   request.sanitize('wordType').trim();
-  request.sanitize('verbPresentThirdPerson').escape();
   request.sanitize('verbPresentThirdPerson').trim();
-  request.sanitize('verbPreteriteFirstPerson').escape();
   request.sanitize('verbPreteriteFirstPerson').trim();
-  request.sanitize('verbPreteriteThirdPerson').escape();
   request.sanitize('verbPreteriteThirdPerson').trim();
-  request.sanitize('verbPerfectAuxiliaryThird').escape();
   request.sanitize('verbPerfectAuxiliaryThird').trim();
-  request.sanitize('verbPastParticiple').escape();
   request.sanitize('verbPastParticiple').trim();
-  request.sanitize('nounArticle').escape();
   request.sanitize('nounArticle').trim();
-  request.sanitize('nounPlural').escape();
   request.sanitize('nounPlural').trim();
-  request.sanitize('nounGender').escape();
   request.sanitize('nounGender').trim();
-  request.sanitize('exampleSentenceDe').escape();
+  request.sanitize('exampleSentenceDe').trim();
   request.sanitize('exampleSentenceEn').trim();
 };
+
+const getExistingCardByWord = async (wordDe) => cardService.fetchOne({ wordDe });
 
 const listAction = asyncMiddleware(async (request, response) => {
   const cards = await cardService.fetchAll(CardService.PROJECTION_SHORT);
@@ -56,9 +46,9 @@ const updateAction = asyncMiddleware(async (request, response) => {
       throw new Error(`Validation error: ${errors[0].msg}`);
     }
 
-    const card = await cardService.fetchByIdAndUpdate(request.body._id, request.body); // eslint-disable-line no-underscore-dangle
+    await cardService.fetchByIdAndUpdate(request.body._id, request.body); // eslint-disable-line no-underscore-dangle
 
-    return response.send(card);
+    return response.redirect('/');
   }
 
   const card = await cardService.fetchById(request.params.id);
@@ -75,10 +65,8 @@ const createAction = asyncMiddleware(async (request, response) => {
       throw new Error(`Validation error: ${errors[0].msg}`);
     }
 
-    const foundCard = await cardService.fetchOne({ wordDe: request.body.wordDe });
-    if (foundCard) {
-      console.log(`Already existing Card: ${foundCard.wordDe}`);
-      return response.redirect(foundCard.url);
+    if (await getExistingCardByWord(request.body.wordDe)) {
+      throw new Error(`Card already exists:${request.body.wordDe}`);
     }
 
     const card = await cardService.create(request.body);
@@ -88,11 +76,17 @@ const createAction = asyncMiddleware(async (request, response) => {
   }
 
   request.sanitize('q').escape().trim();
-
   const word = request.query.q;
+
+  const foundCard = await getExistingCardByWord(word);
+  if (foundCard) {
+    console.log(`Already existing Card: ${foundCard.wordDe}`);
+    return response.redirect(foundCard.url);
+  }
+
   const wordResearch = await researchService.getWordResearch(word);
 
-  return response.render('research', wordResearch);
+  return response.render('card_update', wordResearch);
 });
 
 const deleteAction = asyncMiddleware(async (request, response) => {
@@ -108,7 +102,7 @@ const exportAction = asyncMiddleware(async (request, response) => {
   const cards = await cardService.fetchStaged();
 
   const { content, format } = exportService.getExported(cards);
-  const now = new Date().getTime(); // no need for hrtime, I reckon
+  const now = new Date().getTime(); // used to generate unique-ish filename; high-res time (hrtime()) would be overkill though
 
   response.attachment(`staged-${now}.${format}`);
   response.send(content);

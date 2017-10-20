@@ -16,7 +16,7 @@ class ResearchService {
     }
 
     combined.exampleSentenceDe = ResearchService.concatExamplesByLanguage(combined.examples, 'de');
-    combined.exampleSentenceEn = ResearchService.concatExamplesByLanguage(combined.examples, 'de');
+    combined.exampleSentenceEn = ResearchService.concatExamplesByLanguage(combined.examples, 'en');
 
     return combined;
   }
@@ -25,7 +25,7 @@ class ResearchService {
     examples
       .map(example => example[language])
       .filter(element => !!element)
-      .join(', ');
+      .join(', \n');
 }
 
 export default ResearchService;

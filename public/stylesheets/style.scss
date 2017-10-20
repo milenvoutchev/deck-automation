@@ -10,3 +10,26 @@ a {
 .ipa {
   font-family: 'Arial Unicode MS', 'Lucida Sans Unicode', 'Chrysanthi Unicode', 'Doulos SIL', Gentium, GentiumAlt, Code2000, 'TITUS Cyberbit Basic', 'DejaVu Sans', 'Bitstream Vera Sans', 'Bitstream Cyberbit', 'Hiragino Kaku Gothic Pro', 'Matrix Unicode', 'Lucida Grande', 'MV Boli', 'MS Mincho', Arial, sans-serif;
 }
+
+.row {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: row;
+}
+.col-xs-6 {
+  margin: 4px;
+  padding: 5px;
+  flex: 50%;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+}
+
+
+// @TODO temp remove
+h1 {
+  font-size: 5px;
+}

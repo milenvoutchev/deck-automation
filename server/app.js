@@ -11,10 +11,10 @@ import mongoose from 'mongoose';
 import expressValidator from 'express-validator';
 import hbs from 'hbs';
 import config from './config';
-import homeRouter from './routes/home';
-import cardsRouter from './routes/cards';
-import listRouter from './routes/list';
-import researchRouter from './routes/research';
+import homeRouter from './routes/homeRouter';
+import cardsRouter from './routes/cardsRouter';
+import listRouter from './routes/listRouter';
+import researchRouter from './routes/researchRouter';
 
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
