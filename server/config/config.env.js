@@ -9,6 +9,9 @@ module.exports = {
     appId: process.env.OXFORD_APP_ID,
     appKey: process.env.OXFORD_APP_KEY,
   },
+  research: {
+    limitPreselectedExamples: process.env.LIMIT_PRESELECTED_EXAMPLES,
+  },
   export: {
     fields: process.env.EXPORT_FIELDS,
   },

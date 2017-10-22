@@ -2,6 +2,10 @@
 
 <section>
     <form method="post">
+        <div class="actions">
+            <button>Save</button>
+        </div>
+
         <div><input name="wordDe" value="{{wordDe}}"></div>
         <div><input name="wordEn" value="{{wordEn}}"></div>
         <div><input name="lautschrift" value="{{lautschrift}}" class="ipa"></div>
@@ -16,16 +20,35 @@
         <div><input name="nounGender" value="{{nounGender}}"></div>
 
         <div class="row">
-            <div class="col-xs-6"><textarea name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
-            <div class="col-xs-6"><textarea name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
+            <div class="col-xs-6"><textarea
+                    name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
+            <div class="col-xs-6"><textarea
+                    name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
         </div>
+
+        {{#if examples}}
+            <div class="all-examples">
+                <h3>All examples:</h3>
+                {{#each examples}}
+                    <ul class="row">
+                        {{#if de}}
+                            <li class="col-xs-6 example">{{de}}</li>
+                        {{/if}}
+                        {{#if en}}
+                            <li class="col-xs-6 example">{{en}}</li>
+                        {{/if}}
+                    </ul>
+                {{/each}}
+            </div>
+        {{/if}}
 
         {{#if _id}}
             <div><input type="hidden" name="_id" value="{{_id }}"></div>
         {{/if}}
 
-        <div>
+        <div class="actions">
             <button>Save</button>
         </div>
+
     </form>
 </section>
