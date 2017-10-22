@@ -1,0 +1,13 @@
+{{#if cards}}
+<ul>
+    {{#each cards}}
+        <li>
+            <span>{{isStaged}}</span>
+            <span>{{wordDe}}</span>
+            <span>{{wordEn}}</span>
+            <span>[<a href="{{url}}">edit</a>]</span>
+            <span>[<a href="{{url}}/delete">delete</a>]</span>
+        </li>
+    {{/each}}
+</ul>
+{{/if}}

@@ -15,6 +15,7 @@ import homeRouter from './routes/homeRouter';
 import cardsRouter from './routes/cardsRouter';
 import listRouter from './routes/listRouter';
 import researchRouter from './routes/researchRouter';
+import './helpers/handlebars';
 
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 

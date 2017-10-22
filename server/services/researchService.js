@@ -1,3 +1,5 @@
+import defaultsDeep from 'lodash/defaultsDeep';
+
 class ResearchService {
   constructor(wiktionaryService, oxfordService, config) {
     this.wiktionaryService = wiktionaryService;
@@ -6,11 +8,12 @@ class ResearchService {
   }
 
   async getWordResearch(word) {
-    const oxfordData = this.oxfordService.getWord(word);
-    const wiktionaryData = this.wiktionaryService.getWord(word);
+    const { wiktionaryData, oxfordData } = {
+      wiktionaryData: await this.wiktionaryService.getWord(word),
+      oxfordData: await this.oxfordService.getWord(word),
+    };
 
-    // run both parallel
-    const combined = Object.assign({}, await wiktionaryData, await oxfordData);
+    const combined = defaultsDeep({}, wiktionaryData, oxfordData);
 
     if (Array.isArray(combined.examples) && Array.isArray(combined.usages)) {
       combined.examples = combined.examples.concat(combined.usages);

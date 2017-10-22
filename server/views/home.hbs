@@ -12,15 +12,5 @@
 <section>
     <h2>Staged cards</h2>
     <p>We have <b>{{countStaged}}</b> / {{countCard}} staged cards. [<a href="/cards/export">Export Staged</a>]</p>
-    <ul>
-        {{#each cards}}
-            <li>
-                <span>{{isStaged}}</span>
-                <span>{{wordDe}}</span>
-                <span>{{wordEn}}</span>
-                <span>[<a href="{{url}}">edit</a>]</span>
-                <span>[<a href="{{url}}/delete">delete</a>]</span>
-            </li>
-        {{/each}}
-    </ul>
+    {{>card_list}}
 </section>

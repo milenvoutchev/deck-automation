@@ -19,6 +19,7 @@ const CardSchema = Schema(
     nounGender: { type: String },
     exampleSentenceDe: { type: String },
     exampleSentenceEn: { type: String },
+    sources: Schema.Types.Mixed,
   },
 );
 

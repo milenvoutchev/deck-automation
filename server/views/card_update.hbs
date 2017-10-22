@@ -6,26 +6,26 @@
 
         <fieldset>
             <div class="form-group row">
-                <label for="wordDe" class="col-sm-4 col-form-label">German</label>
-                <div class="col-sm-8">
+                <label for="wordDe" class="col-sm-3 col-form-label">German</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="German" name="wordDe" value="{{wordDe}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="wordEn" class="col-sm-4 col-form-label">English</label>
-                <div class="col-sm-8">
+                <label for="wordEn" class="col-sm-3 col-form-label">English</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="English" name="wordEn" value="{{wordEn}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="lautschrift" class="col-sm-4 col-form-label">IPA</label>
-                <div class="col-sm-8">
+                <label for="lautschrift" class="col-sm-3 col-form-label">IPA</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="IPA" name="lautschrift" value="{{lautschrift}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="wordType" class="col-sm-4 col-form-label">Word Type</label>
-                <div class="col-sm-8">
+                <label for="wordType" class="col-sm-3 col-form-label">Word Type</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="Word Type" name="wordType" value="{{wordType}}">
                 </div>
             </div>
@@ -33,34 +33,34 @@
 
         <fieldset>
             <div class="form-group row">
-                <label for="wordType" class="col-sm-4 col-form-label">Word Type</label>
-                <div class="col-sm-8"><input class="form-control" placeholder="Verb Present 3rd"
+                <label for="wordType" class="col-sm-3 col-form-label">Word Type</label>
+                <div class="col-sm-9"><input class="form-control" placeholder="Verb Present 3rd"
                         name="verbPresentThirdPerson"
                         value="{{verbPresentThirdPerson}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="verbPreteriteFirstPerson" class="col-sm-4 col-form-label">Verb Preterite 1st</label>
-                <div class="col-sm-8">
+                <label for="verbPreteriteFirstPerson" class="col-sm-3 col-form-label">Verb Preterite 1st</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="Verb Preterite 1st" name="verbPreteriteFirstPerson"
                             value="{{verbPreteriteFirstPerson}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="verbPreteriteThirdPerson" class="col-sm-4 col-form-label">Verb Preterite 3rd</label>
-                <div class="col-sm-8"><input class="form-control" placeholder="Verb Preterite 3rd"
+                <label for="verbPreteriteThirdPerson" class="col-sm-3 col-form-label">Verb Preterite 3rd</label>
+                <div class="col-sm-9"><input class="form-control" placeholder="Verb Preterite 3rd"
                         name="verbPreteriteThirdPerson" value="{{verbPreteriteThirdPerson}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="verbPerfectAuxiliaryThird" class="col-sm-4 col-form-label">Verb Perfect Auxiliary 3d</label>
-                <div class="col-sm-8"><input class="form-control" placeholder="Verb Perfect Auxiliary 3d"
+                <label for="verbPerfectAuxiliaryThird" class="col-sm-3 col-form-label">Verb Perfect Auxiliary 3d</label>
+                <div class="col-sm-9"><input class="form-control" placeholder="Verb Perfect Auxiliary 3d"
                         name="verbPerfectAuxiliaryThird" value="{{verbPerfectAuxiliaryThird}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="verbPastParticiple" class="col-sm-4 col-form-label">Verb Past Participle</label>
-                <div class="col-sm-8"><input class="form-control" placeholder="Verb Past Participle"
+                <label for="verbPastParticiple" class="col-sm-3 col-form-label">Verb Past Participle</label>
+                <div class="col-sm-9"><input class="form-control" placeholder="Verb Past Participle"
                         name="verbPastParticiple" value="{{verbPastParticiple}}">
                 </div>
             </div>
@@ -68,20 +68,20 @@
 
         <fieldset>
             <div class="form-group row">
-                <label for="nounArticle" class="col-sm-4 col-form-label">Noun Article</label>
-                <div class="col-sm-8"><input class="form-control" placeholder="Noun Article" name="nounArticle"
+                <label for="nounArticle" class="col-sm-3 col-form-label">Noun Article</label>
+                <div class="col-sm-9"><input class="form-control" placeholder="Noun Article" name="nounArticle"
                         value="{{nounArticle}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="nounPlural" class="col-sm-4 col-form-label">Noun Plural</label>
-                <div class="col-sm-8">
+                <label for="nounPlural" class="col-sm-3 col-form-label">Noun Plural</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="Noun Plural" name="nounPlural" value="{{nounPlural}}">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="nounGender" class="col-sm-4 col-form-label">Noun Gender</label>
-                <div class="col-sm-8">
+                <label for="nounGender" class="col-sm-3 col-form-label">Noun Gender</label>
+                <div class="col-sm-9">
                     <input class="form-control" placeholder="Noun Gender" name="nounGender" value="{{nounGender}}">
                 </div>
             </div>
@@ -107,8 +107,12 @@
             </table>
         {{/if}}
 
+        <!-- insert -->
+        <input type="hidden" name="sources" value="{{json sources}}">
+
         {{#if _id}}
-            <div><input type="hidden" name="_id" value="{{_id }}"></div>
+            <!-- update -->
+            <input type="hidden" name="_id" value="{{_id }}">
         {{/if}}
 
         {{>card_update_actions}}

@@ -35,6 +35,7 @@ class OxfordService {
 
     const wordResearch = new WordResearch();
     wordResearch.examples = examples;
+    wordResearch.sources = { oxford: results[0] };
 
     return wordResearch;
   }

@@ -46,6 +46,8 @@ class WiktionaryService {
     wordResearch.nounPlural = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null;
     wordResearch.nounGender = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null;
     wordResearch.usages = WiktionaryService.getExamples(wikitext, this.languageShort) || [];
+    wordResearch.senses = WiktionaryService.getSenses(wikitext) || [];
+    wordResearch.sources = { wikitext };
 
     return wordResearch;
   }
@@ -59,9 +61,41 @@ class WiktionaryService {
   }
 
   static getWordEn(wikitext) {
-    const senses = WiktionaryService.getSenses(wikitext).map(sense => sense.value);
+    return WiktionaryService
+      .getSenseTranslations(wikitext)
+      .map(sense => `${sense.id} ${sense.translations}`)
+      .join('; ');
+  }
 
-    return senses.join(', ');
+  static getSenses(wikitext) {
+    const rawBlock = WiktionaryService.getWikitextBlockByTitle(wikitext, 'Bedeutungen');
+    const rawSenses = rawBlock.match(/:(\[\d+]) ([\s\S]+?)(\n|$)/g);
+    return rawSenses.map(rawSense => {
+      const match = rawSense.match(/:(\[\d+]) ([\s\S]+?)(\n|$)/);
+      return {
+        id: match[1],
+        value: match[2],
+      };
+    });
+  }
+
+  static getSenseTranslations(wikitext) {
+    // The current response structure is often like "[1] {{tranlation}}, {{translation}}; [2] {{translation}}", e.g.
+    // [1] {{Ü|en|notification}} (''offiziell''), {{Ü|en|answer}}, {{Ü|en|reply}} ''umgangssprachlich:'' (the) {{Ü|en|deal}}<!--Wissen Sie über diese Praxis Bescheid? Do you know the deal with that practice?-->, „Bescheid wissen“ — to {{Ü|en|know}} (about); [2] {{amer.|,}} ''umgangssprachlich:'' (a) {{Ü|en|heads-up}}<!--gebe ich Ihnen Bescheid - I'll give you a heads-up-->, „Bescheid sagen/geben“ — to {{Ü|en|let know}}
+    // I can't derive a clear structure like "[sense] {{tranlation}}", thus am forced to parse in several steps
+    const rawTranslationsBlock = wikitext.match(/\*{{en}}:(.*?)\n\*/g);
+    const rawSenses = rawTranslationsBlock[0].match(/(\[\d]) (.+?)(;|\n)/g);
+
+    return rawSenses.map(rawSense => {
+      const sense = rawSense.match(/(\[\d+])/)[1];
+      const rawTranslations = rawSense.match(/{{Ü\|en\|([\w\s-]+)}}/g);
+      const translations = rawTranslations.map(raw => raw.match(/{{Ü\|en\|([\w\s-]+)}}/)[1]);
+
+      return {
+        id: sense,
+        translations,
+      };
+    });
   }
 
   static getLautschrift(wikitext) {
@@ -102,27 +136,9 @@ class WiktionaryService {
     return wikitext.match(/\|Genus=(\w+)\n\|/i)[1];
   }
 
-  static getSenses(wikitext) {
-    const mathedSenses = wikitext.match(/\[\d+] {{Ü\|en\|[\w\s]+}}/g);
-
-    return mathedSenses.map(raw => {
-      const matches = raw.match(/(\[\d+]) {{Ü\|en\|([\w\s]+)}}/);
-      return {
-        id: matches[1],
-        value: matches[2],
-      };
-    });
-  }
-
-  static removeTagAndContents(text, tag) {
-    const re = new RegExp(`<${tag}>.+?<\\/${tag}>`, 'g');
-
-    return text.replace(re, '');
-  }
-
   static getExamples(wikitext, languageShort) {
     const examplesContainer = WiktionaryService
-      .removeTagAndContents(wikitext, 'ref') // remove quote references
+      .removeHtmlTagAndContents(wikitext, 'ref') // remove quote references
       .replace(/{{Beispiele fehlen\|spr=de}}/, '') // clean "empty" example, as we use '^{' in the regex below
       .match(/{{Beispiele}}\n:([^{]+)/i); // match until next '{'
     const examples = examplesContainer[1].split('\n:');
@@ -136,7 +152,7 @@ class WiktionaryService {
         }
 
         return {
-          sense: matches[1],
+          id: matches[1],
           value: matches[2],
         };
       })
@@ -148,6 +164,16 @@ class WiktionaryService {
           [languageShort]: example.value,
         };
       });
+  }
+
+  static removeHtmlTagAndContents(text, tag) {
+    const re = new RegExp(`<${tag}>.+?<\\/${tag}>`, 'g');
+
+    return text.replace(re, '');
+  }
+
+  static getWikitextBlockByTitle(wikitext, title) {
+    return wikitext.match(String.raw`{{${title}}}([\s\S]+?)\n\n`)[1];
   }
 }
 
