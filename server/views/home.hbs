@@ -1,11 +1,24 @@
-<h1>{{title}}</h1>
+<div class="jumbotron">
+    <h1 class="display-3">{{title}}</h1>
+
+    <p class="lead">A tool to research and export German vocabulary cards for Anki</p>
+    <hr class="my-4">
+
+    <form action="/cards/create">
+        <div class="form-group row">
+            <div class="col-sm-8">
+                <input class="form-control" name="q">
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-primary btn-block">Research Word</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 
 <section>
     <div>
-        <form action="/cards/create">
-            <input name="q">
-            <button>Research Word</button>
-        </form>
     </div>
 </section>
 
