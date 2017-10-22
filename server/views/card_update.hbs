@@ -1,54 +1,117 @@
-<h1>{{wordDe}}</h1>
-
 <section>
     <form method="post">
-        <div class="actions">
-            <button>Save</button>
-        </div>
+        {{>card_update_actions}}
 
-        <div><input name="wordDe" value="{{wordDe}}"></div>
-        <div><input name="wordEn" value="{{wordEn}}"></div>
-        <div><input name="lautschrift" value="{{lautschrift}}" class="ipa"></div>
-        <div><input name="wordType" value="{{wordType}}"></div>
-        <div><input name="verbPresentThirdPerson" value="{{verbPresentThirdPerson}}"></div>
-        <div><input name="verbPreteriteFirstPerson" value="{{verbPreteriteFirstPerson}}"></div>
-        <div><input name="verbPreteriteThirdPerson" value="{{verbPreteriteThirdPerson}}"></div>
-        <div><input name="verbPerfectAuxiliaryThird" value="{{verbPerfectAuxiliaryThird}}"></div>
-        <div><input name="verbPastParticiple" value="{{verbPastParticiple}}"></div>
-        <div><input name="nounArticle" value="{{nounArticle}}"></div>
-        <div><input name="nounPlural" value="{{nounPlural}}"></div>
-        <div><input name="nounGender" value="{{nounGender}}"></div>
+        <legend>{{wordDe}}</legend>
 
-        <div class="row">
-            <div class="col-xs-6"><textarea
-                    name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
-            <div class="col-xs-6"><textarea
-                    name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
-        </div>
+        <fieldset>
+            <div class="form-group row">
+                <label for="wordDe" class="col-sm-4 col-form-label">German</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="German" name="wordDe" value="{{wordDe}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="wordEn" class="col-sm-4 col-form-label">English</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="English" name="wordEn" value="{{wordEn}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="lautschrift" class="col-sm-4 col-form-label">IPA</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="IPA" name="lautschrift" value="{{lautschrift}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="wordType" class="col-sm-4 col-form-label">Word Type</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="Word Type" name="wordType" value="{{wordType}}">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <div class="form-group row">
+                <label for="wordType" class="col-sm-4 col-form-label">Word Type</label>
+                <div class="col-sm-8"><input class="form-control" placeholder="Verb Present 3rd"
+                        name="verbPresentThirdPerson"
+                        value="{{verbPresentThirdPerson}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="verbPreteriteFirstPerson" class="col-sm-4 col-form-label">Verb Preterite 1st</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="Verb Preterite 1st" name="verbPreteriteFirstPerson"
+                            value="{{verbPreteriteFirstPerson}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="verbPreteriteThirdPerson" class="col-sm-4 col-form-label">Verb Preterite 3rd</label>
+                <div class="col-sm-8"><input class="form-control" placeholder="Verb Preterite 3rd"
+                        name="verbPreteriteThirdPerson" value="{{verbPreteriteThirdPerson}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="verbPerfectAuxiliaryThird" class="col-sm-4 col-form-label">Verb Perfect Auxiliary 3d</label>
+                <div class="col-sm-8"><input class="form-control" placeholder="Verb Perfect Auxiliary 3d"
+                        name="verbPerfectAuxiliaryThird" value="{{verbPerfectAuxiliaryThird}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="verbPastParticiple" class="col-sm-4 col-form-label">Verb Past Participle</label>
+                <div class="col-sm-8"><input class="form-control" placeholder="Verb Past Participle"
+                        name="verbPastParticiple" value="{{verbPastParticiple}}">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <div class="form-group row">
+                <label for="nounArticle" class="col-sm-4 col-form-label">Noun Article</label>
+                <div class="col-sm-8"><input class="form-control" placeholder="Noun Article" name="nounArticle"
+                        value="{{nounArticle}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nounPlural" class="col-sm-4 col-form-label">Noun Plural</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="Noun Plural" name="nounPlural" value="{{nounPlural}}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nounGender" class="col-sm-4 col-form-label">Noun Gender</label>
+                <div class="col-sm-8">
+                    <input class="form-control" placeholder="Noun Gender" name="nounGender" value="{{nounGender}}">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm"><textarea name="exampleSentenceDe">{{exampleSentenceDe}}</textarea></div>
+                <div class="col-sm"><textarea name="exampleSentenceEn">{{exampleSentenceEn}}</textarea></div>
+            </div>
+        </fieldset>
 
         {{#if examples}}
-            <div class="all-examples">
-                <h3>All examples:</h3>
+            <h3>All examples:</h3>
+
+            <table class="table table-responsive table-striped">
+                <tbody class="">
                 {{#each examples}}
-                    <ul class="row">
-                        {{#if de}}
-                            <li class="col-xs-6 example">{{de}}</li>
-                        {{/if}}
-                        {{#if en}}
-                            <li class="col-xs-6 example">{{en}}</li>
-                        {{/if}}
-                    </ul>
+                    <tr>
+                        <td>{{de}}</td>
+                        <td>{{en}}</td>
+                    </tr>
                 {{/each}}
-            </div>
+                </tbody>
+            </table>
         {{/if}}
 
         {{#if _id}}
             <div><input type="hidden" name="_id" value="{{_id }}"></div>
         {{/if}}
 
-        <div class="actions">
-            <button>Save</button>
-        </div>
+        {{>card_update_actions}}
 
     </form>
 </section>

@@ -1,22 +1,5 @@
 body {
-  padding: 50px;
-  font: 14px sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-.ipa {
-  font-family: 'Arial Unicode MS', 'Lucida Sans Unicode', 'Chrysanthi Unicode', 'Doulos SIL', Gentium, GentiumAlt, Code2000, 'TITUS Cyberbit Basic', 'DejaVu Sans', 'Bitstream Vera Sans', 'Bitstream Cyberbit', 'Hiragino Kaku Gothic Pro', 'Matrix Unicode', 'Lucida Grande', 'MV Boli', 'MS Mincho', Arial, sans-serif;
-}
-
-.row {
-  display: flex;
-  flex-flow: row;
-}
-.col-xs-6 {
-  flex: 50%;
+  line-height: 1.3;
 }
 
 textarea {
@@ -25,29 +8,8 @@ textarea {
 }
 
 .actions {
-  padding: 4px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
   text-align: center;
-  background: #dddddd;
-}
-
-button {
-  border: 1px solid transparent;
-  background: #384449;
-  color: aliceblue;
-}
-
-.all-examples {
-  .row {
-    margin: 6px 0;
-  }
-  .example {
-    list-style-position: outside;
-    font-style: italic;
-  }
-}
-
-
-// @TODO temp remove
-h1 {
-  font-size: 5px;
+  background: darken(#f8f9fa, 10%);
 }
