@@ -62,8 +62,8 @@ class WiktionaryService {
 
   static getWordEn(wikitext) {
     return WiktionaryService
-      .getSenseTranslations(wikitext)
-      .map(sense => `${sense.id} ${sense.translations}`)
+      .getTranslations(wikitext)
+      .map(sense => `${sense.code} ${sense.translations}`)
       .join('; ');
   }
 
@@ -73,29 +73,49 @@ class WiktionaryService {
     return rawSenses.map(rawSense => {
       const match = rawSense.match(/:(\[\d+]) ([\s\S]+?)(\n|$)/);
       return {
-        id: match[1],
+        code: match[1],
         value: match[2],
       };
     });
   }
 
-  static getSenseTranslations(wikitext) {
-    // The current response structure is often like "[1] {{tranlation}}, {{translation}}; [2] {{translation}}", e.g.
-    // [1] {{Ü|en|notification}} (''offiziell''), {{Ü|en|answer}}, {{Ü|en|reply}} ''umgangssprachlich:'' (the) {{Ü|en|deal}}<!--Wissen Sie über diese Praxis Bescheid? Do you know the deal with that practice?-->, „Bescheid wissen“ — to {{Ü|en|know}} (about); [2] {{amer.|,}} ''umgangssprachlich:'' (a) {{Ü|en|heads-up}}<!--gebe ich Ihnen Bescheid - I'll give you a heads-up-->, „Bescheid sagen/geben“ — to {{Ü|en|let know}}
-    // I can't derive a clear structure like "[sense] {{tranlation}}", thus am forced to parse in several steps
+  static getTranslations(wikitext) {
+    // We need to parse in several steps, as the response structure is often like "[1] {{tranlation}}, {{translation}}; [2] {{translation}}"
+    // and we can't derive a 1:1 structure like "[sense] {{tranlation}}"
+    // Additionally, sometimes senses are misformatted, like "[1] {{tranlation}}, {{translation}} [2] {{translation}}"
+    // i.e. w/o the usual ";" as separator, e.g. for "Widerstand"
+
     const rawTranslationsBlock = wikitext.match(/\*{{en}}:(.*?)\n\*/g);
-    const rawSenses = rawTranslationsBlock[0].match(/(\[\d]) (.+?)(;|\n)/g);
+    const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/(\[[\d,\s]+]) (.+?)(}}|;|\n)/g);
 
-    return rawSenses.map(rawSense => {
-      const sense = rawSense.match(/(\[\d+])/)[1];
-      const rawTranslations = rawSense.match(/{{Ü\|en\|([\w\s-]+)}}/g);
-      const translations = rawTranslations.map(raw => raw.match(/{{Ü\|en\|([\w\s-]+)}}/)[1]);
+    return rawSensesPlusTranslations.map(rawSense => WiktionaryService.getSenseComponents(rawSense));
+  }
 
-      return {
-        id: sense,
-        translations,
-      };
-    });
+  static getSenseComponents(rawSense) {
+    const senseCode = WiktionaryService.getSenseCode(rawSense);
+    const translations = WiktionaryService.getSenseTranslations(rawSense);
+
+    return {
+      code: senseCode,
+      translations,
+    };
+  }
+
+  static getSenseCode(rawSense) {
+    try {
+      return rawSense.match(/(\[[\d,\s]+])/)[1];
+    } catch (error) {
+      throw new Error("Could not parse 'senseCode'", error);
+    }
+  }
+
+  static getSenseTranslations(rawSense) {
+    try {
+      const rawTranslations = rawSense.match(/{{Ü\|en\|([\w\s|-]+)}}/g);
+      return rawTranslations.map(raw => raw.match(/{{Ü\|en\|([\w\s|-]+)}}/)[1]);
+    } catch (error) {
+      throw new Error("Could not parse 'translations'", error);
+    }
   }
 
   static getLautschrift(wikitext) {
@@ -152,7 +172,7 @@ class WiktionaryService {
         }
 
         return {
-          id: matches[1],
+          code: matches[1],
           value: matches[2],
         };
       })
