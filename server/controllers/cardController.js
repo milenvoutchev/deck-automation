@@ -90,12 +90,15 @@ const createAction = asyncMiddleware(async (request, response) => {
 });
 
 const deleteAction = asyncMiddleware(async (request, response) => {
-  // @TODO move to post with confirmation https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms
+  const card = await cardService.fetchById(request.params.id);
+  if (request.method === 'POST') {
+    const deleted = await cardService.delete(request.params.id);
+    console.log(`Deleted card:${deleted._id}`); // eslint-disable-line no-underscore-dangle
 
-  const card = await cardService.delete(request.params.id);
-  console.log(`Deleted card:${card._id}`); // eslint-disable-line no-underscore-dangle
+    return response.redirect('/');
+  }
 
-  return response.redirect('/');
+  return response.render('delete', card);
 });
 
 const exportAction = asyncMiddleware(async (request, response) => {

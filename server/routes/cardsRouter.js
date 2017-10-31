@@ -24,6 +24,7 @@ router.get(ROUTE_CARD_UPDATE, cardController.updateAction);
 router.post(ROUTE_CARD_UPDATE, cardController.updateAction);
 
 router.get(ROUTE_CARD_DELETE, cardController.deleteAction);
+router.post(ROUTE_CARD_DELETE, cardController.deleteAction);
 
 export default router;
 export {
