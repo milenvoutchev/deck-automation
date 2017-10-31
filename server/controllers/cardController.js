@@ -51,7 +51,7 @@ const updateAction = asyncMiddleware(async (request, response) => {
     return response.redirect('/');
   }
 
-  const card = await cardService.fetchById(request.params.code);
+  const card = await cardService.fetchById(request.params.id);
 
   return response.render('card_update', card);
 });
@@ -92,7 +92,7 @@ const createAction = asyncMiddleware(async (request, response) => {
 const deleteAction = asyncMiddleware(async (request, response) => {
   // @TODO move to post with confirmation https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms
 
-  const card = await cardService.delete(request.params.code);
+  const card = await cardService.delete(request.params.id);
   console.log(`Deleted card:${card._id}`); // eslint-disable-line no-underscore-dangle
 
   return response.redirect('/');
