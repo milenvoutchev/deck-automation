@@ -63,7 +63,7 @@ class WiktionaryService {
   static getWordEn(wikitext) {
     return WiktionaryService
       .getTranslations(wikitext)
-      .map(sense => `${sense.code} ${sense.translations}`)
+      .map(sense => `${sense.code} ${sense.translations.join(', ')}`)
       .join('; ');
   }
 
@@ -86,7 +86,7 @@ class WiktionaryService {
     // i.e. w/o the usual ";" as separator, e.g. for "Widerstand"
 
     const rawTranslationsBlock = wikitext.match(/\*{{en}}:(.*?)\n\*/g);
-    const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/(\[[\d,\s]+]) (.+?)(}}|;|\n)/g);
+    const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/([\d, ]+]) (.+?)(\[|\n)/g);
 
     return rawSensesPlusTranslations.map(rawSense => WiktionaryService.getSenseComponents(rawSense));
   }
@@ -103,7 +103,8 @@ class WiktionaryService {
 
   static getSenseCode(rawSense) {
     try {
-      return rawSense.match(/(\[[\d,\s]+])/)[1];
+      const croppedSenseCode = rawSense.match(/([\d, ]+])/)[1];
+      return `[${croppedSenseCode}`;
     } catch (error) {
       throw new Error("Could not parse 'senseCode'", error);
     }
