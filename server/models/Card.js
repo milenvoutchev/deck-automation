@@ -23,15 +23,6 @@ const CardSchema = Schema(
   },
 );
 
-CardSchema
-  .virtual('csv')
-  .get(function () {
-    return [
-      this.wordDe,
-      this.wordEn,
-    ].join(',');
-  });
-
 CardSchema.virtual('url')
   .get(function () {
     return `/cards/${this._id}`; // eslint-disable-line no-underscore-dangle

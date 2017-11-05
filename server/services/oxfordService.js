@@ -36,7 +36,7 @@ class OxfordService {
       .map(example => OxfordService.getFormattedExample(example, this.sourceLanguage));
 
     const wordResearch = new WordResearch();
-    wordResearch.wordEn = OxfordService.getWordEn(results);
+    wordResearch.wordEn = OxfordService.getTranslation(results);
     wordResearch.examples = examples;
     wordResearch.sources = { oxford: results[0] };
 
@@ -56,7 +56,7 @@ class OxfordService {
     };
   }
 
-  static getWordEn(results) {
+  static getTranslation(results) {
     const translations = results[0].lexicalEntries[0].entries.map(entry =>
       entry.senses.map(sense =>
         sense.translations.map(translation =>

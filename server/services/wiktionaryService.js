@@ -1,4 +1,5 @@
 import got from 'got';
+import flatten from 'lodash/flatten';
 import WordResearch from '../dto/WordResearch';
 import logger from '../helpers/logger';
 
@@ -38,7 +39,7 @@ class WiktionaryService {
 
     const wordResearch = new WordResearch();
     wordResearch.wordDe = WiktionaryService.getWordDe(wikitext);
-    wordResearch.wordEn = WiktionaryService.getWordEn(wikitext, categories) || undefined;
+    wordResearch.wordEn = WiktionaryService.getTranslation(wikitext, categories) || undefined;
     wordResearch.wordType = wordType;
     wordResearch.lautschrift = WiktionaryService.getLautschrift(wikitext);
     wordResearch.verbPresentThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null;
@@ -78,7 +79,7 @@ class WiktionaryService {
     return wikitext.match(/== ([A-zÀ-ÿ]+) \({{Sprache\|Deutsch}}\)/)[1]; // match accented words
   }
 
-  static getWordEn(wikitext, categories) {
+  static getTranslation(wikitext, categories) {
     return WiktionaryService
       .getTranslations(wikitext, categories)
       .map(sense => `${sense.code} ${sense.translations.join(', ')}`)
@@ -103,29 +104,49 @@ class WiktionaryService {
     // Additionally, sometimes senses are misformatted, like "[1] {{tranlation}}, {{translation}} [2] {{translation}}"
     // i.e. w/o the usual ";" as separator, e.g. for "Widerstand"
 
-    const hasTranslations = categories.includes('Übersetzungen_(Englisch)');
+    const languages = [
+      {
+        code: 'bg',
+        category: 'Übersetzungen_(Bulgarisch)',
+      },
+      {
+        code: 'en',
+        category: 'Übersetzungen_(Englisch)',
+      },
+    ];
 
-    if (!hasTranslations) {
-      logger.debug('Word has no translations');
+    const languagesTranslations = languages
+      .filter(language => categories.includes(language.category))
+      .map(language => WiktionaryService.getLanguageTranslations(wikitext, language.code));
 
-      return [];
-    }
-
-    logger.debug('Word has translations. Parsing...');
-
-    const rawTranslationsBlock = wikitext.match(/\*{{en}}:(.*?)\n\*/g);
-    const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/([\d, ]+]) (.+?)(\[|\n)/g);
-
-    return rawSensesPlusTranslations.map(rawSense => WiktionaryService.getSenseComponents(rawSense));
+    return flatten(languagesTranslations);
   }
 
-  static getSenseComponents(rawSense) {
+  static getLanguageTranslations(wikitext, langCode) {
+    logger.debug(`Parsing '${langCode}' translations...`);
+
+    const rawTranslationsBlock = wikitext.match(String.raw`\*{{${langCode}}}:(.*?)\n\*`);
+    logger.debug('rawTranslationsBlock:', !!rawTranslationsBlock);
+
+    const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/([\d, ]+]) (.+?)(\[|\n)/g);
+    logger.debug('rawSensesPlusTranslations:', rawSensesPlusTranslations.length);
+
+    return rawSensesPlusTranslations.map(rawSense => WiktionaryService.getSenseComponents(rawSense, langCode));
+  }
+
+  static getSenseComponents(rawSense, langCode) {
     const senseCode = WiktionaryService.getSenseCode(rawSense);
-    const translations = WiktionaryService.getSenseTranslations(rawSense);
+    const senseTranslations = WiktionaryService.getSenseTranslations(rawSense, langCode);
+
+    if (senseTranslations.length <= 0) {
+      throw new Error(`Unexpectedly found no translations for langCode:${langCode}`);
+    }
+
+    logger.debug('senseTranslations:', senseTranslations.length);
 
     return {
       code: senseCode,
-      translations,
+      translations: senseTranslations,
     };
   }
 
@@ -138,13 +159,17 @@ class WiktionaryService {
     }
   }
 
-  static getSenseTranslations(rawSense) {
+  static getSenseTranslations(rawSense, langCode) {
     try {
-      const rawTranslations = rawSense.match(/{{Ü\|en\|([\w\s|-]+)}}/g);
-      logger.debug(`rawTranslations: ${rawTranslations}`);
-      return rawTranslations.map(raw => raw.match(/{{Ü\|en\|([\w\s|-]+)}}/)[1]);
+      // handle all of "{{Ü|en|deer}}", "{{Ü|en|cuckold}}", "{{Üt|bg|гребен|grében}}", "{{Üt|bg|кормило|kormílo}}"
+      const oneTranslationRe = String.raw`{{Üt?\|${langCode}\|([а-я\w\s|-]+?)(\|([\u0000-\u007F\u0080-\u00FF\u0100-\u017F\u0180-\u024F\s-]+))?}}`;
+
+      const rawTranslations = rawSense.match(new RegExp(oneTranslationRe, 'g'));
+      logger.debug('rawTranslations:', rawTranslations.length);
+
+      return rawTranslations.map(raw => raw.match(oneTranslationRe)[1]);
     } catch (error) {
-      throw new Error("Could not parse 'translations'", error);
+      throw new Error(`Could not parse '${langCode}' translations`, error);
     }
   }
 
