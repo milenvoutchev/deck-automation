@@ -1,4 +1,5 @@
 import defaultsDeep from 'lodash/defaultsDeep';
+import logger from '../helpers/logger';
 
 class ResearchService {
   constructor(wiktionaryService, oxfordService, config) {
@@ -8,9 +9,15 @@ class ResearchService {
   }
 
   async getWordResearch(word) {
+    logger.profile('getWordResearch');
+
+    const baseForm = await this.getBaseForm(word);
+    if (baseForm !== word) {
+      logger.info('Base form different, continue with it.');
+    }
     const { wiktionaryData, oxfordData } = {
-      wiktionaryData: await this.wiktionaryService.getWord(word),
-      oxfordData: await this.oxfordService.getWord(word),
+      wiktionaryData: await this.wiktionaryService.getWord(baseForm),
+      oxfordData: await this.oxfordService.getWord(baseForm),
     };
 
     const combined = defaultsDeep({}, wiktionaryData, oxfordData);
@@ -24,7 +31,13 @@ class ResearchService {
     combined.exampleSentenceDe = ResearchService.getPreselectedExamplesByLanguage(preselectedExamples, 'de');
     combined.exampleSentenceEn = ResearchService.getPreselectedExamplesByLanguage(preselectedExamples, 'en');
 
+    logger.profile('getWordResearch');
+
     return combined;
+  }
+
+  getBaseForm(word) {
+    return this.wiktionaryService.getBaseForm(word);
   }
 
   static getPreselectedExamplesByLanguage = (examples, language) =>

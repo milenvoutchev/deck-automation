@@ -4,7 +4,8 @@ import logger from '../helpers/logger';
 
 const WORD_TYPE_VERB = 'Verb';
 const WORD_TYPE_NOUN = 'Substantiv';
-const wordTypes = [WORD_TYPE_VERB, WORD_TYPE_NOUN];
+const WORD_TYPE_DECLINED_FORM = 'Deklinierte Form';
+const WORD_TYPES = [WORD_TYPE_VERB, WORD_TYPE_NOUN];
 
 // @TODO extract/inject language-specific rules as adapter/strategy/config
 
@@ -21,15 +22,14 @@ class WiktionaryService {
       throw new Error(`Error fetching word data: ${error.info}`);
     }
 
-    return wiktionaryResponse.body;
+    return wiktionaryResponse.body.parse.wikitext['*'];
   }
 
   async getWord(word) {
-    const wordData = await this.fetchRawData(word);
-    const wikitext = wordData.parse.wikitext['*'];
+    const wikitext = await this.fetchRawData(word);
 
     const wordType = WiktionaryService.getWordType(wikitext);
-    if (!wordTypes.includes(wordType)) {
+    if (!WORD_TYPES.includes(wordType)) {
       throw new Error(`Unknown word type: ${wordType}`);
     }
 
@@ -50,13 +50,24 @@ class WiktionaryService {
     wordResearch.senses = WiktionaryService.getSenses(wikitext) || [];
     wordResearch.sources = { wikitext };
 
-    logger.debug('wordResearch:', wordResearch);
+    logger.silly('wordResearch:', wordResearch);
 
     return wordResearch;
   }
 
+  async getBaseForm(word) {
+    const wikitext = await this.fetchRawData(word);
+
+    if (WiktionaryService.getWordType(wikitext) === WORD_TYPE_DECLINED_FORM) {
+      return wikitext.match(/{{Grundformverweis Dekl\|([\w\s]+)}}/)[1];
+    }
+
+    return word;
+  }
+
   static getWordType(wikitext) {
-    const wordType = wikitext.match(/{{Wortart\|(\w+)\|Deutsch}}/)[1];
+    const wordType = wikitext.match(/{{Wortart\|([\w\s]+)\|Deutsch}}/)[1];
+    logger.debug(`wordType: ${wordType}`);
     return wordType;
   }
 
