@@ -15,4 +15,7 @@ module.exports = {
   export: {
     fields: process.env.EXPORT_FIELDS,
   },
+  session: {
+    secret: process.env.SESSION_SECRET,
+  },
 };
