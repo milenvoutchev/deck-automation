@@ -1,5 +1,7 @@
 import got from 'got';
+import flattenDeep from 'lodash/flattenDeep';
 import WordResearch from '../dto/WordResearch';
+import logger from '../helpers/logger';
 
 class OxfordService {
   constructor(config) {
@@ -34,8 +36,11 @@ class OxfordService {
       .map(example => OxfordService.getFormattedExample(example, this.sourceLanguage));
 
     const wordResearch = new WordResearch();
+    wordResearch.wordEn = OxfordService.getWordEn(results);
     wordResearch.examples = examples;
     wordResearch.sources = { oxford: results[0] };
+
+    logger.silly('OxfordService::wordResearch: ', wordResearch);
 
     return wordResearch;
   }
@@ -49,6 +54,14 @@ class OxfordService {
       [sourceLanguage]: rawExample.text,
       [rawExample.translations[0].language]: rawExample.translations[0].text,
     };
+  }
+
+  static getWordEn(results) {
+    const translations = results[0].lexicalEntries[0].entries.map(entry =>
+      entry.senses.map(sense =>
+        sense.translations.map(translation =>
+          translation.text)));
+    return [...new Set(flattenDeep(translations))].join(', '); // flatten, unique
   }
 }
 
