@@ -1,20 +1,21 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
     <a class="navbar-brand" href="#">Deck Automation</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
+        <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" href="/">Research</a>
             <a class="nav-item nav-link" href="/cards">Cards</a>
             <a class="nav-item nav-link" href="/cards/export">Export Staged</a>
             <a class="nav-item nav-link" href="/cards/purge">Purge</a>
-            {{#if user}}
-                <div class="nav-item">
-                    <p>Logged in as {{user.username}}</p>
-                    <a class="nav-link" href="/account/logout">Logout</a>
-                </div>
-            {{/if}}
         </div>
+        {{#if user}}
+            <span class="my-2 my-lg-0 navbar-text">
+                Hi, {{user.username}} <a class="btn btn-link align-baseline" href="/account/logout">Logout</a>
+            </span>
+        {{/if}}
+    </div>
     </div>
 </nav>

@@ -27,20 +27,21 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
 app.use(sassMiddleware({
   src: path.join(__dirname, '../public'),
   dest: path.join(__dirname, '../public'),
   sourceMap: true,
 }));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(morgan('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
 app.use(expressSession({
-  secret: 'ghdjk*&^%JHGFyg3t48int7843wjgdfkgh458ghjdhfkj',
+  saveUninitialized: true,
   resave: false,
-  saveUninitialized: false,
+  secret: config.session.secret,
+  cookie: { httpOnly: true, maxAge: 2419200000 }, // configure when sessions expires
 }));
 app.use(passport.initialize());
 app.use(passport.session());
