@@ -6,6 +6,7 @@ class ResearchService {
     this.wiktionaryService = wiktionaryService;
     this.oxfordService = oxfordService;
     this.limitPreselectedExamples = config.limitPreselectedExamples;
+    this.smartSort = config.smartSort;
   }
 
   async getWordResearch(word) {
@@ -24,6 +25,15 @@ class ResearchService {
 
     if (Array.isArray(combined.examples) && Array.isArray(combined.usages)) {
       combined.examples = combined.examples.concat(combined.usages);
+    }
+
+    if (this.smartSort) {
+      combined.examples.sort((a, b) => {
+        const hasEnglish = -100; // negative = higher priority
+        const getSortPriority = example => (example.en ? (example.de.length + hasEnglish) : example.de.length);
+
+        return getSortPriority(a) - getSortPriority(b);
+      });
     }
 
     const preselectedExamples = combined.examples.slice(0, this.limitPreselectedExamples);

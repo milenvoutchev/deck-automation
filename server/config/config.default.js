@@ -4,6 +4,7 @@ module.exports = {
   },
   research: {
     limitPreselectedExamples: 3,
+    smartSort: true,
   },
   export: {
     fields: 'wordDe,wordEn,wordType,verbPresentThirdPerson,verbPreteriteThirdPerson,verbPerfectAuxiliaryThird,verbPastParticiple,nounArticle,nounPlural,nounGender,prepositionCase,pronounCase,articleCase,articleCase,germanTriggerSentence,exampleSentenceDe,exampleSentenceEn',
