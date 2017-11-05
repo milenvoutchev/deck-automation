@@ -4,19 +4,23 @@
 import express from 'express';
 import path from 'path';
 import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import sassMiddleware from 'node-sass-middleware';
 import mongoose from 'mongoose';
 import expressValidator from 'express-validator';
 import hbs from 'hbs';
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import expressSession from 'express-session';
 import config from './config';
 import homeRouter from './routes/homeRouter';
 import cardsRouter from './routes/cardsRouter';
 import listRouter from './routes/listRouter';
 import researchRouter from './routes/researchRouter';
+import accountRouter from './routes/accountRouter';
 import './helpers/handlebars';
 import logger from './helpers/logger';
+import Account from './models/Account';
 
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
@@ -27,7 +31,6 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
-app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, '../public'),
   dest: path.join(__dirname, '../public'),
@@ -35,11 +38,19 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(morgan('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
+app.use(expressSession({
+  secret: 'ghdjk*&^%JHGFyg3t48int7843wjgdfkgh458ghjdhfkj',
+  resave: false,
+  saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', homeRouter);
 app.use('/cards', cardsRouter);
 app.use('/list', listRouter);
 app.use('/research', researchRouter);
+app.use('/account', accountRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -58,6 +69,11 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// setup passport
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 // setup db
 mongoose.Promise = Promise;

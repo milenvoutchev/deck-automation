@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const CardSchema = Schema(
+const CardSchema = new Schema(
   {
     isStaged: { type: Boolean, required: true, default: true },
     wordDe: { type: String, required: true, max: 100 },

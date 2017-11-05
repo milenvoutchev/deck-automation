@@ -9,6 +9,12 @@
             <a class="nav-item nav-link" href="/cards">Cards</a>
             <a class="nav-item nav-link" href="/cards/export">Export Staged</a>
             <a class="nav-item nav-link" href="/cards/purge">Purge</a>
+            {{#if user}}
+                <div class="nav-item">
+                    <p>Logged in as {{user.username}}</p>
+                    <a class="nav-link" href="/account/logout">Logout</a>
+                </div>
+            {{/if}}
         </div>
     </div>
 </nav>

@@ -1,9 +1,11 @@
 import express from 'express';
 import homeController from '../controllers/homeController';
+import ensureAuthenticated from '../helpers/ensureAuthenticated';
 
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', homeController.indexAction);
+const ROUTE_HOME = '/';
+
+router.get(ROUTE_HOME, ensureAuthenticated, homeController.indexAction);
 
 export default router;

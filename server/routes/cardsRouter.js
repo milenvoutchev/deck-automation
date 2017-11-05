@@ -1,5 +1,6 @@
 import express from 'express';
 import cardController from '../controllers/cardController';
+import ensureAuthenticated from '../helpers/ensureAuthenticated';
 
 const router = express.Router();
 
@@ -10,21 +11,21 @@ const ROUTE_CARD_EXPORT = '/export';
 const ROUTE_CARD_UPDATE = '/:id';
 const ROUTE_CARD_DELETE = '/:id/delete';
 
-router.get(ROUTE_CARD_LIST, cardController.listAction);
+router.get(ROUTE_CARD_LIST, ensureAuthenticated, cardController.listAction);
 
-router.get(ROUTE_CARD_PURGE, cardController.purgeAction);
-router.post(ROUTE_CARD_PURGE, cardController.purgeAction);
+router.get(ROUTE_CARD_PURGE, ensureAuthenticated, cardController.purgeAction);
+router.post(ROUTE_CARD_PURGE, ensureAuthenticated, cardController.purgeAction);
 
-router.post(ROUTE_CARD_CREATE, cardController.createAction);
-router.get(ROUTE_CARD_CREATE, cardController.createAction);
+router.post(ROUTE_CARD_CREATE, ensureAuthenticated, cardController.createAction);
+router.get(ROUTE_CARD_CREATE, ensureAuthenticated, cardController.createAction);
 
-router.get(ROUTE_CARD_EXPORT, cardController.exportAction);
+router.get(ROUTE_CARD_EXPORT, ensureAuthenticated, cardController.exportAction);
 
-router.get(ROUTE_CARD_UPDATE, cardController.updateAction);
-router.post(ROUTE_CARD_UPDATE, cardController.updateAction);
+router.get(ROUTE_CARD_UPDATE, ensureAuthenticated, cardController.updateAction);
+router.post(ROUTE_CARD_UPDATE, ensureAuthenticated, cardController.updateAction);
 
-router.get(ROUTE_CARD_DELETE, cardController.deleteAction);
-router.post(ROUTE_CARD_DELETE, cardController.deleteAction);
+router.get(ROUTE_CARD_DELETE, ensureAuthenticated, cardController.deleteAction);
+router.post(ROUTE_CARD_DELETE, ensureAuthenticated, cardController.deleteAction);
 
 export default router;
 export {
