@@ -15,7 +15,6 @@ import expressSession from 'express-session';
 import config from './config';
 import homeRouter from './routes/homeRouter';
 import cardsRouter from './routes/cardsRouter';
-import listRouter from './routes/listRouter';
 import researchRouter from './routes/researchRouter';
 import accountRouter from './routes/accountRouter';
 import './helpers/handlebars';
@@ -48,7 +47,6 @@ app.use(passport.session());
 
 app.use('/', homeRouter);
 app.use('/cards', cardsRouter);
-app.use('/list', listRouter);
 app.use('/research', researchRouter);
 app.use('/account', accountRouter);
 
