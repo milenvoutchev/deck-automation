@@ -6,45 +6,45 @@ class CardService {
     this.Card = Card;
   }
 
-  async fetchStaged(projection = null) {
+  fetchStaged(projection = null) {
     return this.Card.find({ isStaged: true }, projection);
   }
 
-  async fetchAll(projection = null) {
+  fetchAll(projection = null) {
     return this.Card.find({}, projection);
   }
 
-  async fetchOne(conditions = {}, projection = null) {
+  fetchOne(conditions = {}, projection = null) {
     return this.Card.findOne(conditions, projection);
   }
 
-  async fetchById(id) {
+  fetchById(id) {
     return this.Card.findById(id);
   }
 
-  async purge() {
+  purge() {
     return this.Card.deleteMany({});
   }
 
-  async delete(id) {
+  delete(id) {
     return this.Card.findByIdAndRemove(id);
   }
 
-  async fetchByIdAndUpdate(id, update = {}) {
+  fetchByIdAndUpdate(id, update = {}) {
     return this.Card.findByIdAndUpdate(id, update, {
       new: true,
     });
   }
 
-  async create(docs = {}) {
+  create(docs = {}) {
     return this.Card.create(docs);
   }
 
-  async countStaged() {
+  countStaged() {
     return this.Card.count({ isStaged: true });
   }
 
-  async count(conditions) {
+  count(conditions) {
     return this.Card.count(conditions);
   }
 }

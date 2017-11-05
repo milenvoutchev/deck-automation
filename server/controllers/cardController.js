@@ -22,7 +22,7 @@ const validateCardInBody = (request) => {
   request.sanitize('exampleSentenceEn').trim();
 };
 
-const getExistingCardByWord = async (wordDe) => cardService.fetchOne({ wordDe });
+const getExistingCardByWord = (wordDe) => cardService.fetchOne({ wordDe });
 
 const listAction = asyncMiddleware(async (request, response) => {
   const cards = await cardService.fetchAll(CardService.PROJECTION_SHORT);
