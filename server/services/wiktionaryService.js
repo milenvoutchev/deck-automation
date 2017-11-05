@@ -179,11 +179,12 @@ class WiktionaryService {
   }
 
   static getNounPlural(wikitext) {
-    return wikitext.match(/\|Nominativ Plural=([A-zÀ-ÿ ]+)\n\|/i)[1];
+    // sometimes there are two forms, e.g. "Plural 1", " Plural 2"; or only one, e.g. "Plural"
+    return wikitext.match(/\|Nominativ Plural[ \d]{0,2}=([A-zÀ-ÿ ]+)\n\|/i)[1];
   }
 
   static getNounGender(wikitext) {
-    return wikitext.match(/\|Genus=(\w+)\n\|/i)[1];
+    return wikitext.match(/{{Wortart\|Substantiv\|Deutsch}}, {{(\w)}} ===\n\n/i)[1];
   }
 
   static getExamples(wikitext, languageShort) {
