@@ -5,8 +5,9 @@ import logger from '../helpers/logger';
 
 const WORD_TYPE_VERB = 'Verb';
 const WORD_TYPE_NOUN = 'Substantiv';
+const WORD_TYPE_ADJECTIVE = 'Adjektiv';
 const WORD_TYPE_DECLINED_FORM = 'Deklinierte Form';
-const WORD_TYPES = [WORD_TYPE_VERB, WORD_TYPE_NOUN];
+const WORD_TYPES = [WORD_TYPE_VERB, WORD_TYPE_NOUN, WORD_TYPE_ADJECTIVE];
 
 // @TODO extract/inject language-specific rules as adapter/strategy/config
 
