@@ -1,5 +1,6 @@
 import got from 'got';
 import WordResearch from '../dto/WordResearch';
+import logger from '../helpers/logger';
 
 const WORD_TYPE_VERB = 'Verb';
 const WORD_TYPE_NOUN = 'Substantiv';
@@ -35,7 +36,7 @@ class WiktionaryService {
     const wordResearch = new WordResearch();
     wordResearch.wordDe = WiktionaryService.getWordDe(wikitext);
     wordResearch.wordEn = WiktionaryService.getWordEn(wikitext);
-    wordResearch.wordType = WiktionaryService.getWordType(wikitext);
+    wordResearch.wordType = wordType;
     wordResearch.lautschrift = WiktionaryService.getLautschrift(wikitext);
     wordResearch.verbPresentThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null;
     wordResearch.verbPreteriteFirstPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null;
@@ -49,11 +50,14 @@ class WiktionaryService {
     wordResearch.senses = WiktionaryService.getSenses(wikitext) || [];
     wordResearch.sources = { wikitext };
 
+    logger.debug('wordResearch:', wordResearch);
+
     return wordResearch;
   }
 
   static getWordType(wikitext) {
-    return wikitext.match(/{{Wortart\|(\w+)\|Deutsch}}/)[1];
+    const wordType = wikitext.match(/{{Wortart\|(\w+)\|Deutsch}}/)[1];
+    return wordType;
   }
 
   static getWordDe(wikitext) {

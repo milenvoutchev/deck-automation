@@ -3,7 +3,7 @@
 
 import express from 'express';
 import path from 'path';
-import logger from 'morgan';
+import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import sassMiddleware from 'node-sass-middleware';
@@ -16,6 +16,7 @@ import cardsRouter from './routes/cardsRouter';
 import listRouter from './routes/listRouter';
 import researchRouter from './routes/researchRouter';
 import './helpers/handlebars';
+import logger from './helpers/logger';
 
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
@@ -33,7 +34,7 @@ app.use(sassMiddleware({
   sourceMap: true,
 }));
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(logger('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
+app.use(morgan('short')); // NB: logger is after express.static() meaning it will not log requests of static/existing files, e.g. .css
 
 app.use('/', homeRouter);
 app.use('/cards', cardsRouter);
@@ -64,6 +65,6 @@ mongoose.connect(config.mongoDB.URI, {
   useMongoClient: true,
 });
 const db = mongoose.connection;
-db.on('error', (error) => console.error('DB error:', error));
+db.on('error', (error) => logger.error('DB error:', error));
 
 module.exports = app;

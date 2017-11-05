@@ -1,6 +1,9 @@
+/* eslint no-underscore-dangle: */
+
 import { cardService, exportService, researchService } from '../services';
 import CardService from '../services/cardService';
 import asyncMiddleware from '../helpers/asyncMiddleware';
+import logger from '../helpers/logger';
 
 // @TODO is there no better way?
 const validateCardInBody = (request) => {
@@ -32,6 +35,7 @@ const listAction = asyncMiddleware(async (request, response) => {
 const purgeAction = asyncMiddleware(async (request, response) => {
   if (request.method === 'POST') {
     const result = await cardService.purge();
+    logger.info('Purged all cards'); // eslint-disable-line no-underscore-dangle
     return response.send(`Purged ${result.deletedCount} cards.`);
   }
   return response.render('purge');
@@ -47,6 +51,7 @@ const updateAction = asyncMiddleware(async (request, response) => {
     }
 
     await cardService.fetchByIdAndUpdate(request.body._id, request.body); // eslint-disable-line no-underscore-dangle
+    logger.info(`Updated card: ${request.body._id}`); // eslint-disable-line no-underscore-dangle
 
     return response.redirect('/');
   }
@@ -65,12 +70,13 @@ const createAction = asyncMiddleware(async (request, response) => {
       throw new Error(`Validation error: ${errors[0].msg}`);
     }
 
-    if (await getExistingCardByWord(request.body.wordDe)) {
-      throw new Error(`Card already exists:${request.body.wordDe}`);
+    const foundCard = await getExistingCardByWord(request.body.wordDe);
+    if (foundCard) {
+      throw new Error(`Card already exists: ${foundCard._id}`);
     }
 
     const card = await cardService.create(request.body);
-    console.log(`Created card:${card._id}`); // eslint-disable-line no-underscore-dangle
+    logger.info(`Created card:${card._id}`);
 
     return response.redirect('/');
   }
@@ -80,9 +86,10 @@ const createAction = asyncMiddleware(async (request, response) => {
 
   const foundCard = await getExistingCardByWord(word);
   if (foundCard) {
-    console.log(`Already existing Card: ${foundCard.wordDe}`);
+    logger.info(`Already existing Card: ${foundCard._id}`);
     return response.redirect(foundCard.url);
   }
+  logger.info(`New card: ${request.query.q}`);
 
   const wordResearch = await researchService.getWordResearch(word);
 
@@ -93,7 +100,7 @@ const deleteAction = asyncMiddleware(async (request, response) => {
   const card = await cardService.fetchById(request.params.id);
   if (request.method === 'POST') {
     const deleted = await cardService.delete(request.params.id);
-    console.log(`Deleted card:${deleted._id}`); // eslint-disable-line no-underscore-dangle
+    logger.info(`Deleted card: ${deleted._id}`);
 
     return response.redirect('/');
   }
