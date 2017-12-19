@@ -32,7 +32,16 @@ class WiktionaryService {
   async getWord(word) {
     const { wikitext, categories } = await this.fetchRawData(word);
 
+    const wordResearch = this.createWordResearch(wikitext, categories);
+
+    logger.silly('WiktionaryService::wordResearch: ', wordResearch);
+
+    return wordResearch;
+  }
+
+  createWordResearch(wikitext, categories) {
     const wordType = WiktionaryService.getWordType(wikitext);
+
     if (!WiktionaryService.isValidWordType(wordType)) {
       throw new Error(`Unknown word type: ${wordType}`);
     }
@@ -53,9 +62,6 @@ class WiktionaryService {
     wordResearch.usages = WiktionaryService.getExamples(wikitext, this.languageShort) || [];
     wordResearch.senses = WiktionaryService.getSenses(wikitext) || [];
     wordResearch.sources = { wikitext };
-
-    logger.silly('WiktionaryService::wordResearch: ', wordResearch);
-
     return wordResearch;
   }
 

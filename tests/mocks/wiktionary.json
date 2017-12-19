@@ -1,0 +1,55 @@
+{
+  "rawData": {
+    "wikitext": "== anheuern ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Verb|Deutsch}} ===\n\n{{Deutsch Verb Übersicht\n|Präsens_ich=heuere an\n|Präsens_du=heuerst an\n|Präsens_er, sie, es=heuert an\n|Präteritum_ich=heuerte an\n|Partizip II=angeheuert\n|Konjunktiv II_ich=heuerte an\n|Imperativ Singular=heuere an\n|Imperativ Plural=heuert an\n|Hilfsverb=haben\n}}\n\n{{Worttrennung}}\n:an·heu·ern, {{Prät.}} heu·er·te an, {{Part.}} an·ge·heu·ert\n\n{{Aussprache}}\n:{{IPA}} {{Lautschrift|ˈanˌhɔɪ̯ɐn}}, {{Prät.}} {{Lautschrift|ˌhɔɪ̯ɐtə ˈan}}, {{Part.}} {{Lautschrift|ˈanɡəˌhɔɪ̯ɐt}}\n:{{Hörbeispiele}} {{Audio|De-anheuern.ogg}}, {{Prät.}} {{Audio|}}, {{Part.}} {{Audio|}}\n\n{{Bedeutungen}}\n:[1] ''[[Nautik]]'': jemanden für den Dienst an Bord einstellen\n:[2] ''[[Nautik]]'': den Dienst an Bord antreten\n:[3] jemanden für eine bestimmte Aufgabe gewinnen\n\n{{Herkunft}}\n:[1] [[Ableitung]] zu ''[[heuern]]'' mit dem [[Derivatem]] ([[Ableitungsmorphem]]) ''[[an-]]''\n\n{{Gegenwörter}}\n:[1, 2] [[abheuern]], [[abmustern]]\n:[3] [[anwerben]]\n\n{{Oberbegriffe}}\n:[1] [[einstellen]]\n\n{{Beispiele}}\n:[1] „Sie ließen die Diligent komplett überholen und ''heuerten'' eine Mannschaft ''an'', welche die Waren für die erste Fahrt nach Martinique an Bord verstaute; das Ganze nahm beinahe neun Monate in Anspruch.“<ref>{{Literatur | Autor=Robert Harms| Titel =Das Sklavenschiff| TitelErg=Eine Reise in die Welt des Sklavenhandels| Verlag=C. Bertelsmann Verlag | Ort=ohne Ort | Jahr=2004 | ISBN=3-570-00277-2 |Seiten=124. }} Kursiv gedruckt: ''Diligent''.</ref>\n:[2] Der Schiffsführer hat um 6 Uhr ''angeheuert.''\n:[3] Für den Einbruch hat der Kriminelle zwei Komplizen ''angeheuert.''\n\n==== {{Übersetzungen}} ====\n{{Ü-Tabelle|Ü-links=\n*{{en}}: [1] {{Ü|en|}}\n*{{fr}}: [1] {{Ü|fr|}}\n|Ü-rechts=\n*{{ru}}: [1] {{Üt|ru||}}\n*{{es}}: [1] {{Ü|es|}}\n}}\n\n{{Referenzen}}\n:[1, 2] {{Ref-DWDS|anheuern}}\n:[1, (3)] {{Ref-Canoo|anheuern}}\n:[1] {{Ref-UniLeipzig|anheuern}}\n:[1–3] {{Ref-FreeDictionary|anheuern}}\n:[1–3] {{Ref-Duden|anheuern}}\n\n{{Quellen}}",
+    "categories": [
+      "Seiten,_die_magische_ISBN-Links_verwenden",
+      "Deutsch",
+      "siehe_auch",
+      "Verb_(Deutsch)",
+      "Rückläufige_Wörterliste_(Deutsch)",
+      "Verb",
+      "Wiktionary:Audio-Datei"
+    ]
+  },
+  "expected": {
+    "wordDe": "anheuern",
+    "wordType": "Verb",
+    "lautschrift": "ˈanɡəˌhɔɪ̯ɐt",
+    "verbPresentThirdPerson": "heuert an",
+    "verbPreteriteFirstPerson": "heuerte an",
+    "verbPreteriteThirdPerson": "heuerte an",
+    "verbPerfectAuxiliaryThird": "hat",
+    "verbPastParticiple": "angeheuert",
+    "nounArticle": null,
+    "nounPlural": null,
+    "nounGender": null,
+    "usages": [
+      {
+        "de": "„Sie ließen die Diligent komplett überholen und ''heuerten'' eine Mannschaft ''an'', welche die Waren für die erste Fahrt nach Martinique an Bord verstaute; das Ganze nahm beinahe neun Monate in Anspruch.“"
+      },
+      {
+        "de": "Der Schiffsführer hat um 6 Uhr ''angeheuert.''"
+      },
+      {
+        "de": "Für den Einbruch hat der Kriminelle zwei Komplizen ''angeheuert.''"
+      }
+    ],
+    "senses": [
+      {
+        "code": "[1]",
+        "value": "''[[Nautik]]'': jemanden für den Dienst an Bord einstellen"
+      },
+      {
+        "code": "[2]",
+        "value": "''[[Nautik]]'': den Dienst an Bord antreten"
+      },
+      {
+        "code": "[3]",
+        "value": "jemanden für eine bestimmte Aufgabe gewinnen"
+      }
+    ],
+    "sources": {
+      "wikitext": "== anheuern ({{Sprache|Deutsch}}) ==\n=== {{Wortart|Verb|Deutsch}} ===\n\n{{Deutsch Verb Übersicht\n|Präsens_ich=heuere an\n|Präsens_du=heuerst an\n|Präsens_er, sie, es=heuert an\n|Präteritum_ich=heuerte an\n|Partizip II=angeheuert\n|Konjunktiv II_ich=heuerte an\n|Imperativ Singular=heuere an\n|Imperativ Plural=heuert an\n|Hilfsverb=haben\n}}\n\n{{Worttrennung}}\n:an·heu·ern, {{Prät.}} heu·er·te an, {{Part.}} an·ge·heu·ert\n\n{{Aussprache}}\n:{{IPA}} {{Lautschrift|ˈanˌhɔɪ̯ɐn}}, {{Prät.}} {{Lautschrift|ˌhɔɪ̯ɐtə ˈan}}, {{Part.}} {{Lautschrift|ˈanɡəˌhɔɪ̯ɐt}}\n:{{Hörbeispiele}} {{Audio|De-anheuern.ogg}}, {{Prät.}} {{Audio|}}, {{Part.}} {{Audio|}}\n\n{{Bedeutungen}}\n:[1] ''[[Nautik]]'': jemanden für den Dienst an Bord einstellen\n:[2] ''[[Nautik]]'': den Dienst an Bord antreten\n:[3] jemanden für eine bestimmte Aufgabe gewinnen\n\n{{Herkunft}}\n:[1] [[Ableitung]] zu ''[[heuern]]'' mit dem [[Derivatem]] ([[Ableitungsmorphem]]) ''[[an-]]''\n\n{{Gegenwörter}}\n:[1, 2] [[abheuern]], [[abmustern]]\n:[3] [[anwerben]]\n\n{{Oberbegriffe}}\n:[1] [[einstellen]]\n\n{{Beispiele}}\n:[1] „Sie ließen die Diligent komplett überholen und ''heuerten'' eine Mannschaft ''an'', welche die Waren für die erste Fahrt nach Martinique an Bord verstaute; das Ganze nahm beinahe neun Monate in Anspruch.“<ref>{{Literatur | Autor=Robert Harms| Titel =Das Sklavenschiff| TitelErg=Eine Reise in die Welt des Sklavenhandels| Verlag=C. Bertelsmann Verlag | Ort=ohne Ort | Jahr=2004 | ISBN=3-570-00277-2 |Seiten=124. }} Kursiv gedruckt: ''Diligent''.</ref>\n:[2] Der Schiffsführer hat um 6 Uhr ''angeheuert.''\n:[3] Für den Einbruch hat der Kriminelle zwei Komplizen ''angeheuert.''\n\n==== {{Übersetzungen}} ====\n{{Ü-Tabelle|Ü-links=\n*{{en}}: [1] {{Ü|en|}}\n*{{fr}}: [1] {{Ü|fr|}}\n|Ü-rechts=\n*{{ru}}: [1] {{Üt|ru||}}\n*{{es}}: [1] {{Ü|es|}}\n}}\n\n{{Referenzen}}\n:[1, 2] {{Ref-DWDS|anheuern}}\n:[1, (3)] {{Ref-Canoo|anheuern}}\n:[1] {{Ref-UniLeipzig|anheuern}}\n:[1–3] {{Ref-FreeDictionary|anheuern}}\n:[1–3] {{Ref-Duden|anheuern}}\n\n{{Quellen}}"
+    }
+  }
+}
