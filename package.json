@@ -11,7 +11,7 @@
     "dev:nolint": "nodemon -w server --exec \"npm run dev:start\"",
     "lint": "eslint --ext .js server",
     "lint:fix": "eslint --fix --ext .js server",
-    "test": "jest server/tests/*",
+    "test": "jest tests/*",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watchAll"
   },
@@ -59,7 +59,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "server/tests/*"
+      "tests/*"
     ],
     "delay": "250"
   }
