@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import sinon from 'sinon';
 import WiktionaryService from '../../server/services/wiktionaryService';
 import mocks from '../mocks/wiktionary.json';
 
@@ -17,12 +16,14 @@ describe('wiktionaryService', () => {
   describe('createWordResearch()', () => {
     const wiktionaryService = new WiktionaryService();
 
-    it('renders correctly against saved snapshots', () => {
-      const { wikitext, categories } = mocks.rawData;
-      const wordResearch = wiktionaryService.createWordResearch(wikitext, categories);
+    it('created objects are as expected according to stored data set', () => {
 
-      // expect(JSON.stringify(wordResearch)).toBe(JSON.stringify(wiktionarySnapshots.expected));
-      expect(wordResearch).toMatchSnapshot();
+      for(const mock of mocks) {
+        const { wikitext, categories } = mock.rawData;
+        const wordResearch = wiktionaryService.createWordResearch(wikitext, categories);
+        // JSON.stringify needed for when there were 'undefined' values (e.g. for wordEn: undefined)
+        expect(JSON.stringify(wordResearch)).toBe(JSON.stringify(mock.expected));
+      }
     });
   });
 });

@@ -1,5 +1,6 @@
 import got from 'got';
 import flatten from 'lodash/flatten';
+import fs from 'fs';
 import WordResearch from '../dto/WordResearch';
 import logger from '../helpers/logger';
 
@@ -35,6 +36,9 @@ class WiktionaryService {
     const wordResearch = this.createWordResearch(wikitext, categories);
 
     logger.silly('WiktionaryService::wordResearch: ', wordResearch);
+
+    fs.writeFileSync('.rawData.json.tmp', JSON.stringify({ wikitext, categories }));
+    fs.writeFileSync('.wordResearch.json.tmp', JSON.stringify(wordResearch));
 
     return wordResearch;
   }
