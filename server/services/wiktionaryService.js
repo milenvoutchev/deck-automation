@@ -1,13 +1,8 @@
 import got from 'got';
 import flatten from 'lodash/flatten';
+import fs from 'fs';
 import WordResearch from '../dto/WordResearch';
 import logger from '../helpers/logger';
-
-const WORD_TYPE_VERB = 'Verb';
-const WORD_TYPE_NOUN = 'Substantiv';
-const WORD_TYPE_ADJECTIVE = 'Adjektiv';
-const WORD_TYPE_DECLINED_FORM = 'Deklinierte Form';
-const WORD_TYPES = [WORD_TYPE_VERB, WORD_TYPE_NOUN, WORD_TYPE_ADJECTIVE];
 
 // @TODO extract/inject language-specific rules as adapter/strategy/config
 
@@ -15,6 +10,11 @@ class WiktionaryService {
   constructor() {
     this.languageShort = 'de';
   }
+
+  static WORD_TYPE_VERB = 'Verb';
+  static WORD_TYPE_NOUN = 'Substantiv';
+  static WORD_TYPE_ADJECTIVE = 'Adjektiv';
+  static WORD_TYPE_DECLINED_FORM = 'Deklinierte Form';
 
   async fetchRawData(word) {
     const getUri = query => `https://${this.languageShort}.wiktionary.org/w/api.php?format=json&action=parse&prop=wikitext|templates|categories&redirects=1&contentmodel=wikitext&page=${query}`;
@@ -33,8 +33,20 @@ class WiktionaryService {
   async getWord(word) {
     const { wikitext, categories } = await this.fetchRawData(word);
 
+    const wordResearch = this.createWordResearch(wikitext, categories);
+
+    logger.silly('WiktionaryService::wordResearch: ', wordResearch);
+
+    // fs.writeFileSync('.WiktionaryService-rawData.json.tmp', JSON.stringify({ wikitext, categories }));
+    // fs.writeFileSync('.WiktionaryService-wordResearch.json.tmp', JSON.stringify(wordResearch));
+
+    return wordResearch;
+  }
+
+  createWordResearch(wikitext, categories) {
     const wordType = WiktionaryService.getWordType(wikitext);
-    if (!WORD_TYPES.includes(wordType)) {
+
+    if (!WiktionaryService.isValidWordType(wordType)) {
       throw new Error(`Unknown word type: ${wordType}`);
     }
 
@@ -43,31 +55,38 @@ class WiktionaryService {
     wordResearch.wordEn = WiktionaryService.getTranslation(wikitext, categories) || undefined;
     wordResearch.wordType = wordType;
     wordResearch.lautschrift = WiktionaryService.getLautschrift(wikitext);
-    wordResearch.verbPresentThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null;
-    wordResearch.verbPreteriteFirstPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null;
-    wordResearch.verbPreteriteThirdPerson = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null; // we take 1st person, as it seems to be the same as 3rd person most of the time
-    wordResearch.verbPerfectAuxiliaryThird = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : null;
-    wordResearch.verbPastParticiple = wordType === WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : null;
-    wordResearch.nounArticle = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null;
-    wordResearch.nounPlural = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null;
-    wordResearch.nounGender = wordType === WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null;
+    wordResearch.verbPresentThirdPerson = wordType === WiktionaryService.WORD_TYPE_VERB ? WiktionaryService.getVerbPresentThirdPerson(wikitext) : null;
+    wordResearch.verbPreteriteFirstPerson = wordType === WiktionaryService.WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null;
+    wordResearch.verbPreteriteThirdPerson = wordType === WiktionaryService.WORD_TYPE_VERB ? WiktionaryService.getVerbPreteriteFirstPerson(wikitext) : null; // we take 1st person, as it seems to be the same as 3rd person most of the time
+    wordResearch.verbPerfectAuxiliaryThird = wordType === WiktionaryService.WORD_TYPE_VERB ? WiktionaryService.getVerbPerfectAuxiliaryThirdPerson(wikitext) : null;
+    wordResearch.verbPastParticiple = wordType === WiktionaryService.WORD_TYPE_VERB ? WiktionaryService.getVerbPastParticiple(wikitext) : null;
+    wordResearch.nounArticle = wordType === WiktionaryService.WORD_TYPE_NOUN ? WiktionaryService.getNounArticle(wikitext) : null;
+    wordResearch.nounPlural = wordType === WiktionaryService.WORD_TYPE_NOUN ? WiktionaryService.getNounPlural(wikitext) : null;
+    wordResearch.nounGender = wordType === WiktionaryService.WORD_TYPE_NOUN ? WiktionaryService.getNounGender(wikitext) : null;
     wordResearch.usages = WiktionaryService.getExamples(wikitext, this.languageShort) || [];
     wordResearch.senses = WiktionaryService.getSenses(wikitext) || [];
     wordResearch.sources = { wikitext };
-
-    logger.silly('WiktionaryService::wordResearch: ', wordResearch);
-
     return wordResearch;
   }
 
   async getBaseForm(word) {
     const { wikitext } = await this.fetchRawData(word);
 
-    if (WiktionaryService.getWordType(wikitext) === WORD_TYPE_DECLINED_FORM) {
+    if (WiktionaryService.getWordType(wikitext) === WiktionaryService.WORD_TYPE_DECLINED_FORM) {
       return wikitext.match(/{{Grundformverweis Dekl\|([\w\s]+)}}/)[1];
     }
 
     return word;
+  }
+
+  static isValidWordType(wordType) {
+    const VALID_WORD_TYPES = [
+      WiktionaryService.WORD_TYPE_VERB,
+      WiktionaryService.WORD_TYPE_NOUN,
+      WiktionaryService.WORD_TYPE_ADJECTIVE,
+    ];
+
+    return VALID_WORD_TYPES.includes(wordType);
   }
 
   static getWordType(wikitext) {
@@ -126,7 +145,7 @@ class WiktionaryService {
   static getLanguageTranslations(wikitext, langCode) {
     logger.debug(`Parsing '${langCode}' translations...`);
 
-    const rawTranslationsBlock = wikitext.match(String.raw`\*{{${langCode}}}:(.*?)\n\*`);
+    const rawTranslationsBlock = wikitext.match(String.raw`\*{{${langCode}}}( <small>.*?<\/small>)?: (.*?)\n\*`);
     logger.debug('rawTranslationsBlock:', !!rawTranslationsBlock);
 
     const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/([\d, ]+]) (.+?)(\[|\n)/g);

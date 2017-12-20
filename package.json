@@ -11,7 +11,7 @@
     "dev:nolint": "nodemon -w server --exec \"npm run dev:start\"",
     "lint": "eslint --ext .js server",
     "lint:fix": "eslint --fix --ext .js server",
-    "test": "jest server/tests/*",
+    "test": "jest tests/*",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watchAll"
   },
@@ -47,7 +47,8 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "jest": "^21.2.1",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "sinon": "^4.1.3"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -58,7 +59,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "server/tests/*"
+      "tests/*"
     ],
     "delay": "250"
   }
