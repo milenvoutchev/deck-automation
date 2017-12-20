@@ -1,4 +1,5 @@
 import got from 'got';
+import fs from 'fs';
 import flattenDeep from 'lodash/flattenDeep';
 import WordResearch from '../dto/WordResearch';
 import logger from '../helpers/logger';
@@ -32,6 +33,17 @@ class OxfordService {
   async getWord(word) {
     const results = await this.fetchRawData(word);
 
+    const wordResearch = this.createWordResearch(results);
+
+    logger.silly('OxfordService::wordResearch: ', wordResearch);
+
+    // fs.writeFileSync('.OxfordService-rawData.json.tmp', JSON.stringify(results));
+    // fs.writeFileSync('.OxfordService-wordResearch.json.tmp', JSON.stringify(wordResearch));
+
+    return wordResearch;
+  }
+
+  createWordResearch(results) {
     const examples = OxfordService.getExamples(results)
       .map(example => OxfordService.getFormattedExample(example, this.sourceLanguage));
 
@@ -39,8 +51,6 @@ class OxfordService {
     wordResearch.wordEn = OxfordService.getTranslation(results);
     wordResearch.examples = examples;
     wordResearch.sources = { oxford: results[0] };
-
-    logger.silly('OxfordService::wordResearch: ', wordResearch);
 
     return wordResearch;
   }
@@ -58,9 +68,12 @@ class OxfordService {
 
   static getTranslation(results) {
     const translations = results[0].lexicalEntries[0].entries.map(entry =>
-      entry.senses.map(sense =>
-        sense.translations.map(translation =>
-          translation.text)));
+      entry.senses.map(sense => {
+        if (sense.translations) {
+          return sense.translations.map(translation => translation.text);
+        }
+        return [];
+      }));
     return [...new Set(flattenDeep(translations))].join(', '); // flatten, unique
   }
 }

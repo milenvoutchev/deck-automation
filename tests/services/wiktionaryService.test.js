@@ -3,6 +3,19 @@ import WiktionaryService from '../../server/services/wiktionaryService';
 import mocks from '../mocks/wiktionary.json';
 
 describe('wiktionaryService', () => {
+  describe('createWordResearch()', () => {
+    const wiktionaryService = new WiktionaryService();
+
+    it('created objects are as expected, according to stored data set', () => {
+      expect.assertions(2);
+
+      for(const mock of mocks) {
+        const { wikitext, categories } = mock.rawData;
+        const wordResearch = wiktionaryService.createWordResearch(wikitext, categories);
+        expect(wordResearch).toEqual(mock.expected);
+      }
+    });
+  });
 
   describe('isValidWordType()', () => {
     it('correctly recognises valid/invalid word types', () => {
@@ -13,17 +26,13 @@ describe('wiktionaryService', () => {
     });
   });
 
-  describe('createWordResearch()', () => {
-    const wiktionaryService = new WiktionaryService();
+  describe('getLanguageTranslations()', () => {
+    // Test here abnormal cases (presume that the most common cases are tested with 'createWordResearch()')
 
-    it('created objects are as expected according to stored data set', () => {
-
-      for(const mock of mocks) {
-        const { wikitext, categories } = mock.rawData;
-        const wordResearch = wiktionaryService.createWordResearch(wikitext, categories);
-        // JSON.stringify needed for when there were 'undefined' values (e.g. for wordEn: undefined)
-        expect(JSON.stringify(wordResearch)).toBe(JSON.stringify(mock.expected));
-      }
+    it('containing ISO tag', () => {
+      const input = "\n*{{bg}} <small>([[w:ISO 9|ISO 9]])</small>: [1] {{Üt|bg|герб|gerb}} {{m}}\n*";
+      const expected = [ { code: '[1]', translations: [ 'герб' ] } ];
+      expect(WiktionaryService.getLanguageTranslations(input, 'bg')).toEqual(expected);
     });
   });
 });

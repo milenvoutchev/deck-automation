@@ -37,8 +37,8 @@ class WiktionaryService {
 
     logger.silly('WiktionaryService::wordResearch: ', wordResearch);
 
-    fs.writeFileSync('.rawData.json.tmp', JSON.stringify({ wikitext, categories }));
-    fs.writeFileSync('.wordResearch.json.tmp', JSON.stringify(wordResearch));
+    // fs.writeFileSync('.WiktionaryService-rawData.json.tmp', JSON.stringify({ wikitext, categories }));
+    // fs.writeFileSync('.WiktionaryService-wordResearch.json.tmp', JSON.stringify(wordResearch));
 
     return wordResearch;
   }
@@ -145,7 +145,7 @@ class WiktionaryService {
   static getLanguageTranslations(wikitext, langCode) {
     logger.debug(`Parsing '${langCode}' translations...`);
 
-    const rawTranslationsBlock = wikitext.match(String.raw`\*{{${langCode}}}:(.*?)\n\*`);
+    const rawTranslationsBlock = wikitext.match(String.raw`\*{{${langCode}}}( <small>.*?<\/small>)?: (.*?)\n\*`);
     logger.debug('rawTranslationsBlock:', !!rawTranslationsBlock);
 
     const rawSensesPlusTranslations = rawTranslationsBlock[0].match(/([\d, ]+]) (.+?)(\[|\n)/g);
