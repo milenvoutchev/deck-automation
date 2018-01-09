@@ -14,6 +14,7 @@ class WiktionaryService {
   static WORD_TYPE_VERB = 'Verb';
   static WORD_TYPE_NOUN = 'Substantiv';
   static WORD_TYPE_ADJECTIVE = 'Adjektiv';
+  static WORD_TYPE_ADVERB = 'Adverb';
   static WORD_TYPE_DECLINED_FORM = 'Deklinierte Form';
 
   async fetchRawData(word) {
@@ -84,6 +85,7 @@ class WiktionaryService {
       WiktionaryService.WORD_TYPE_VERB,
       WiktionaryService.WORD_TYPE_NOUN,
       WiktionaryService.WORD_TYPE_ADJECTIVE,
+      WiktionaryService.WORD_TYPE_ADVERB,
     ];
 
     return VALID_WORD_TYPES.includes(wordType);
