@@ -1,5 +1,7 @@
+import config from '../config';
+
 const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (config.app.disableAuth || req.isAuthenticated()) {
     // req.user is available for use here
     res.locals.user = req.user;
 

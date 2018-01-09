@@ -40,7 +40,7 @@ app.use(morgan('short')); // NB: logger is after express.static() meaning it wil
 app.use(expressSession({
   saveUninitialized: true,
   resave: false,
-  secret: config.session.secret,
+  secret: config.app.sessionSecret,
   cookie: { httpOnly: true, maxAge: 2419200000 }, // configure when sessions expires
 }));
 app.use(passport.initialize());
